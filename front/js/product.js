@@ -11,7 +11,7 @@ let title = document.getElementById("title");
 let imageUrl = document.querySelector(".item__img");
 let prix = document.getElementById("price");
 let description = document.getElementById("description");
-let couleurs = document.getElementById("colors");
+let couleurs = document.querySelector("colors");
 
 
 // Je récupére mon produit depuis mon API
@@ -45,11 +45,12 @@ async function fetchApiProduct() {
         description.innerHTML = data.description;
 
         //Je crée une boucle pour le choix des Couleurs
-        /* for (let i = 0; i < data.couleurs.lenght; i++)
-             let couleurs = document.getElementById("colors");
-         couleurs.innerHTML = '<option value="${data.couleurs[i]}, ${data.couleurs[i]}"</option>';*/
+        for (let i = 0; i < data.colors.length; i++) {
+            couleurs = document.getElementById("colors");
+            couleurs.innerHTML += `
+            <option value="${data.colors[i]}">${data.colors[i]}</option>`;
+        }
     }
-
 }
 fetchApiProduct();
 
