@@ -6,6 +6,7 @@ console.log(productId);
 
 /*Je crée un Array Kanape pour y mettre mes datas*/
 let kanape = [];
+let selectProduct = {};
 
 /*Je déclare mes variables et fait le lien avec ma page html*/
 
@@ -75,20 +76,8 @@ function displayProduct(product) {
         //pour empêcher le lien d'ouvrir un URL
         event.preventDefault();
 
-        //J'envoie la couleur choisie
-        product.color[i].addEventListener("click", (e) => {
-            selectProduct.color = e.target.value;
-        });
-
-        //Je modifie la quantité du produit 
-        quantity.addEventListener("change", (e) => {
-            if (e.target.value != "" || e.target.value != 0) {
-                selectProduct.quantity = e.target.value;
-            }
-        });
-
         //Je récupère les données saisies par l'utilisateur dont mon Id, la couleur et la quantité
-        let selectProduct = {
+        selectProduct = {
             id: productId,
             img: product.imageUrl,
             name: product.name,
@@ -98,11 +87,18 @@ function displayProduct(product) {
             quantity: "0",
         }
 
-        //J'envoie la couleur choisie
-        selectColor.addEventListener("click", (e) => {
-            selectProduct.color = e.target.value;
-        });
+        console.log(selectColor);
+        console.log(selectColor.value);
 
+        //Je récupère la couleur choisie par l'utilisateur dans mon objet selectProduct
+        selectProduct.color += selectColor.value;
+        console.log(selectProduct.color);
+
+        if (selectProduct.color == "") {
+            alert('Veuillez choisir une couleur');
+        }
+
+        //faire pareil que la couleur
         //Je modifie la quantité du produit 
         quantity.addEventListener("change", (e) => {
             if (e.target.value != "" || e.target.value != 0) {
