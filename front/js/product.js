@@ -84,27 +84,28 @@ function displayProduct(product) {
             price: product.price,
             description: product.description,
             color: [],
-            quantity: "0",
+            quantity: "",
         }
 
-        console.log(selectColor);
         console.log(selectColor.value);
+        console.log(quantity.value);
 
         //Je récupère la couleur choisie par l'utilisateur dans mon objet selectProduct
         selectProduct.color += selectColor.value;
         console.log(selectProduct.color);
 
-        if (selectProduct.color == "") {
+        if (selectProduct.color == []) {
             alert('Veuillez choisir une couleur');
         }
 
-        //faire pareil que la couleur
-        //Je modifie la quantité du produit 
-        quantity.addEventListener("change", (e) => {
-            if (e.target.value != "" || e.target.value != 0) {
-                selectProduct.quantity = e.target.value;
-            }
-        });
+        //Je récupère la quantité choisie par l'utilisateur dans mon objet selectProduct
+        selectProduct.quantity += quantity.value;
+        console.log(selectProduct.quantity);
+
+
+        if (selectProduct.quantity == 0 || selectProduct.quantity == "" || selectProduct.quantity > 100) {
+            alert('Veuillez indiquer une quantité correcte')
+        }
 
         //j'ajoute un produit dans le local storage en chaine de caractère
         localStorage.setItem("basket", JSON.stringify(selectProduct));
