@@ -6,7 +6,6 @@ console.log(productId);
 
 /*Je crée un Array Kanape pour y mettre mes datas*/
 let kanape = [];
-let selectProduct = {};
 
 /*Je déclare mes variables et fait le lien avec ma page html*/
 
@@ -17,32 +16,21 @@ let description = document.getElementById("description");
 let selectColor = document.querySelector("colors");
 let quantity = document.getElementById("quantity");
 
-/* 
-let productStorage = {
-    name: "",
-    price: "",
-    id: "",
-    colors: [],
-    quantity: 0,
-    img: "",
-    altTxt: "",
-}; */
-
 /*Je récupére mon produit depuis mon API*/
-async function fetchApiProduct() {
-    await fetch(`http://localhost:3000/api/products/${productId}`)
-        .then(function(res) {
+function fetchApiProduct() {
+    fetch(`http://localhost:3000/api/products/${productId}`)
+        .then((res) => {
             if (res.ok) {
                 return res.json();
             }
         })
-        .then(function(data) {
+        .then((data) => {
             kanape = data;
             console.log(kanape);
             displayProduct(kanape);
         })
-        .catch(function(err) {
-            console.log('une erreur est survenue, err');
+        .catch((err) => {
+            console.log(err);
         });
 }
 fetchApiProduct();
@@ -76,60 +64,60 @@ function displayProduct(product) {
         //pour empêcher le lien d'ouvrir un URL
         event.preventDefault();
 
+        console.log(selectColor.value);
+        console.log(quantity.value);
+
         //Je récupère les données saisies par l'utilisateur dont mon Id, la couleur et la quantité
-        selectProduct = {
+        let selectProduct = {
             id: productId,
             img: product.imageUrl,
             name: product.name,
             price: product.price,
             description: product.description,
-            color: [],
-            quantity: "",
+            color: selectColor.value,
+            quantity: quantity.value,
         }
 
-        console.log(selectColor.value);
-        console.log(quantity.value);
-
-        //Je récupère la couleur choisie par l'utilisateur dans mon objet selectProduct
-        selectProduct.color += selectColor.value;
-        console.log(selectProduct.color);
-
-        if (selectProduct.color == []) {
-            alert('Veuillez choisir une couleur');
+        //J'ajoute un produit dans le local storage en chaine de caractère
+        function saveBasket() {
+            localStorage.setItem("basket", JSON.stringify(selectProduct));
         }
-
-        //Je récupère la quantité choisie par l'utilisateur dans mon objet selectProduct
-        selectProduct.quantity += quantity.value;
-        console.log(selectProduct.quantity);
-
-
-        if (selectProduct.quantity == 0 || selectProduct.quantity == "" || selectProduct.quantity > 100) {
-            alert('Veuillez indiquer une quantité correcte')
-        }
-
-        //j'ajoute un produit dans le local storage en chaine de caractère
-        localStorage.setItem("basket", JSON.stringify(selectProduct));
-
         //Je récupère mon produit du local storage en objet
         function getLocalStorage() {
-            return JSON.parse(localStorage.getItems("basket"));
+            let basket = JSON.parse(localStorage.getItems("basket"));
         }
 
-        //ne fonctionne pas, supp ancien panier
-        function addBasket(product) {
-            let basket = getLocalStorage();
-            basket.push(product);
-            localStorage.setItem("product", JSON.stringify(selectProduct));
-            //j'ajoute mon produit si celui-ci n'est pas vide
-            if (basket) {
-                let getProduct = basket.find((p) => p.id == selectProduct.id && p.colors == selectProduct.colors);
+        //Fonction qui vérifie s'il manque les indications de couleurs et/ou quantité sinon j'ajoute et enregistrer le panier dans le local storage
+        function verifyInvalidInput() {
+            if (selectProduct.color == []) {
+                alert('Veuillez choisir une couleur');
+            } else if (selectProduct.quantity == 0 || selectProduct.quantity == "" || selectProduct.quantity > 100) {
+                alert('Veuillez indiquer une quantité correcte')
+            } else {
+                saveBasket();
+                getLocalStorage();
+                addBasket(selectProduct);
+            }
+        }
+
+
+        //si mon panier est vide, je retourne un tableau vide sinon je recherche si mon produit a le même id et couleur
+        function addProduct(product) {
+            if (basket == null) {
+                return [];
+            } else if (basket) {
+                let getProduct = basket.find(p => p.id == selectProduct.id && p.colors == selectProduct.colors);
             }
             // si produit trouvé on met à jour sa quantité
-            if (getProduct) {
-                getProduct.quantity += selectProduct.quantity;
+            else if (getProduct) {
+                getProduct.quantity++;
+            } else {
+                product.quantity = 1;
+                basket.push(product);
             }
-            getLocalStorage();
         }
+
+        verifyInvalidInput();
         //Chargement de la page cart
         // window.location.assign("cart.html"); 
     })
