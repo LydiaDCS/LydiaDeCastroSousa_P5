@@ -64,9 +64,6 @@ function displayProduct(product) {
         //pour empêcher le lien d'ouvrir un URL
         event.preventDefault();
 
-        console.log(selectColor.value);
-        console.log(quantity.value);
-
         //Je récupère les données saisies par l'utilisateur dont mon Id, la couleur et la quantité
         let selectProduct = {
             id: productId,
@@ -74,52 +71,53 @@ function displayProduct(product) {
             name: product.name,
             price: product.price,
             description: product.description,
-            color: selectColor.value,
+            colors: selectColor.value,
             quantity: quantity.value,
         }
+        verifyInvalidInput(selectProduct);
 
-        //J'ajoute un produit dans le local storage en chaine de caractère
-        function saveBasket() {
-            localStorage.setItem("basket", JSON.stringify(selectProduct));
-        }
-        //Je récupère mon produit du local storage en objet
-        function getLocalStorage() {
-            let basket = JSON.parse(localStorage.getItems("basket"));
-        }
-
-        //Fonction qui vérifie s'il manque les indications de couleurs et/ou quantité sinon j'ajoute et enregistrer le panier dans le local storage
+        //Fonction qui vérifie s'il manque les indications de couleurs et/ou quantité sinon je récupère le panier, j'ajoute et j'enregistre un produit dans le local storage
         function verifyInvalidInput() {
-            if (selectProduct.color == []) {
+            if (selectProduct.colors == []) {
                 alert('Veuillez choisir une couleur');
             } else if (selectProduct.quantity == 0 || selectProduct.quantity == "" || selectProduct.quantity > 100) {
                 alert('Veuillez indiquer une quantité correcte')
             } else {
-                saveBasket();
-                getLocalStorage();
-                addBasket(selectProduct);
+                addToLocalStorage(selectProduct);
             }
         }
 
 
         //si mon panier est vide, je retourne un tableau vide sinon je recherche si mon produit a le même id et couleur
-        function addProduct(product) {
+        function addToLocalStorage(product) {
+            let basket = JSON.parse(localStorage.getItem("product"));
+            console.log(basket);
             if (basket == null) {
-                return [];
+                basket = [];
+                basket.push(selectProduct);
+                console.log(basket);
+                //J'envoie un produit dans le local storage
+                localStorage.setItem("produit", JSON.stringify(basket));
             } else if (basket) {
-                let getProduct = basket.find(p => p.id == selectProduct.id && p.colors == selectProduct.colors);
-            }
-            // si produit trouvé on met à jour sa quantité
-            else if (getProduct) {
-                getProduct.quantity++;
-            } else {
-                product.quantity = 1;
-                basket.push(product);
-            }
+                let getProduct = basket.find(
+                    (p) =>
+                    selectProduct.id == p.id && selectProduct.colors == p.colors);
+                if (getProduct) {
+                    basket;
+                    getProduct.quantity++;
+                    //J'envoie la nouvelle quantité dans le local storage
+                    localStorage.setItem("produit", JSON.stringify(basket));
+                } else {
+                    basket;
+                    product.quantity = 1;
+                    basket.push(selectProduct);
+                    //J'envoie un nouveau produit dans le local storage
+                    localStorage.setItem("produit", JSON.stringify(basket));
+                }
+            };
         }
-
-        verifyInvalidInput();
         //Chargement de la page cart
-        // window.location.assign("cart.html"); 
+        window.location.assign("cart.html");
     })
-    ajouterAuPanier();
+
 }
