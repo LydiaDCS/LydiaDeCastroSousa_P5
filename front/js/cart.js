@@ -11,7 +11,7 @@ let basketDisplay = async() => {
         cartItem.innerHTML = addProduct.map((produit) =>
             `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
                 <div class="cart__item__img">
-                  <img src="${selectProduct.img}]" alt="Photographie d'un canapé">
+                  <img src="${products.img}" alt="Photographie d'un canapé">
                 </div>
                 <div class="cart__item__content">
                   <div class="cart__item__content__description">
@@ -31,6 +31,9 @@ let basketDisplay = async() => {
                 </div>
               </article>`
         )
+
+        let totalQuantity = document.getElementById("totalQuantity");
+        let totalPrice = document.getElementById("totalPrice");
 
 
     }

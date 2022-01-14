@@ -83,10 +83,12 @@ function displayProduct(product) {
             } else if (selectProduct.quantity == 0 || selectProduct.quantity == "" || selectProduct.quantity > 100) {
                 alert('Veuillez indiquer une quantité correcte')
             } else {
+                //Je récupère mon produit du local storage
                 addToLocalStorage(selectProduct);
+                //Chargement de la page cart
+                //window.location.assign("cart.html");
             }
         }
-
 
         //si mon panier est vide, je retourne un tableau vide sinon je recherche si mon produit a le même id et couleur
         function addToLocalStorage(product) {
@@ -94,30 +96,29 @@ function displayProduct(product) {
             console.log(basket);
             if (basket == null) {
                 basket = [];
-                basket.push(selectProduct);
+                basket.push(product);
                 console.log(basket);
-                //J'envoie un produit dans le local storage
-                localStorage.setItem("produit", JSON.stringify(basket));
+                localStorage.setItem("product", JSON.stringify(basket));
+
             } else if (basket) {
                 let getProduct = basket.find(
                     (p) =>
                     selectProduct.id == p.id && selectProduct.colors == p.colors);
                 if (getProduct) {
-                    basket;
-                    getProduct.quantity++;
+
+                    getProduct.quantity = +selectProduct.quantity;
+                    basket.push(getProduct);
                     //J'envoie la nouvelle quantité dans le local storage
-                    localStorage.setItem("produit", JSON.stringify(basket));
+                    localStorage.setItem("product", JSON.stringify(basket));
                 } else {
-                    basket;
+
                     product.quantity = 1;
-                    basket.push(selectProduct);
+                    basket.push(product);
                     //J'envoie un nouveau produit dans le local storage
                     localStorage.setItem("produit", JSON.stringify(basket));
                 }
             };
         }
-        //Chargement de la page cart
-        window.location.assign("cart.html");
     })
 
 }
