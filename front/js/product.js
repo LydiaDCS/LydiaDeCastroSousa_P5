@@ -97,9 +97,8 @@ function displayProduct(product) {
             if (basket == null) {
                 basket = [];
                 basket.push(product);
-                console.log(basket);
                 localStorage.setItem("product", JSON.stringify(basket));
-
+                console.log(basket);
             } else if (basket) {
                 let getProduct = basket.find(
                     (p) =>
@@ -107,15 +106,12 @@ function displayProduct(product) {
                 if (getProduct) {
                     basket.push(getProduct);
                     getProduct.quantity++;
-
-                    //J'envoie la nouvelle quantité dans le local storage
                     localStorage.setItem("product", JSON.stringify(basket));
                 } else {
-
-                    product.quantity;
+                    product.quantity = selectProduct.quantity;
                     basket.push(product);
                     //J'envoie un nouveau produit dans le local storage
-                    localStorage.setItem("produit", JSON.stringify(basket));
+                    localStorage.setItem("product", JSON.stringify(basket));
                 }
             };
         }

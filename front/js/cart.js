@@ -1,4 +1,4 @@
-let addProduct = JSON.parse(localStorage.getItem("produit"));
+let addProduct = JSON.parse(localStorage.getItem("product"));
 
 
 let basketDisplay = async() => {
@@ -8,7 +8,7 @@ let basketDisplay = async() => {
 
         let cartItem = document.getElementById("cart__items");
 
-        cartItem.innerHTML = addProduct.map((produit) =>
+        cartItem.innerHTML = addProduct.map((product) =>
             `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
                 <div class="cart__item__img">
                   <img src="${products.img}" alt="Photographie d'un canapé">
