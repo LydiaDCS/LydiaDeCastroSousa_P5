@@ -105,14 +105,14 @@ function displayProduct(product) {
                     (p) =>
                     selectProduct.id == p.id && selectProduct.colors == p.colors);
                 if (getProduct) {
-
-                    getProduct.quantity = +selectProduct.quantity;
                     basket.push(getProduct);
+                    getProduct.quantity++;
+
                     //J'envoie la nouvelle quantité dans le local storage
                     localStorage.setItem("product", JSON.stringify(basket));
                 } else {
 
-                    product.quantity = 1;
+                    product.quantity;
                     basket.push(product);
                     //J'envoie un nouveau produit dans le local storage
                     localStorage.setItem("produit", JSON.stringify(basket));
