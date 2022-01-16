@@ -104,7 +104,7 @@ function displayProduct(product) {
                     (p) =>
                     selectProduct.id == p.id && selectProduct.colors == p.colors);
                 if (getProduct) {
-                    getProduct.quantity++;
+                    getProduct.quantity = Number(selectProduct.quantity) + Number(getProduct.quantity);
                     localStorage.setItem("product", JSON.stringify(basket));
                 } else {
                     product.quantity = selectProduct.quantity;
