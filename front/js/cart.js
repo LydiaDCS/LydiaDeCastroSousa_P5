@@ -1,48 +1,49 @@
-let addProduct = JSON.parse(localStorage.getItem("product"));
+//Je récupère mon panier du local storage
+let basket = JSON.parse(localStorage.getItem("product"));
 
 
 let basketDisplay = async() => {
-    if (addProduct) {
-        await addProduct;
-        console.log(addProduct);
+    if (basket) {
+        await basket;
+        console.log(basket);
 
-        let cartItem = document.getElementById("cart__items");
+        for (let product of basket) {
+            let cartItem = document.getElementById("cart__items");
 
-        cartItem.innerHTML = addProduct.map((product) =>
-            `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
-                <div class="cart__item__img">
-                  <img src="${products.img}" alt="Photographie d'un canapé">
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__description">
-                    <h2>Nom du produit</h2>
-                    <p>Vert</p>
-                    <p>42,00 €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+            cartItem.innerHTML +=
+                `<article class="cart__item" data-id="${product.id}" data-color="${product.colors}">
+                    <div class="cart__item__img">
+                      <img src="${product.img}" alt="${product.description}">
                     </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
+                    <div class="cart__item__content">
+                      <div class="cart__item__content__description">
+                        <h2>${product.name}</h2>
+                        <p>${product.colors}</p>
+                        <p>${product.price} €</p>
+                      </div>
+                      <div class="cart__item__content__settings">
+                        <div class="cart__item__content__settings__quantity">
+                          <p>Qté :</p>
+                          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                        </div>
+                        <div class="cart__item__content__settings__delete">
+                          <p class="deleteItem">Supprimer</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </article>`
-        )
-
-        let totalQuantity = document.getElementById("totalQuantity");
-        let totalPrice = document.getElementById("totalPrice");
-
-
+                  </article>`
+        }
     }
 
 
+    let totalQuantity = document.getElementById("totalQuantity");
+    let totalPrice = document.getElementById("totalPrice");
+    let deleteProduct = document.getElementsByClassName("deleteItem");
 
 
 }
-basketDisplay();
+
+basketDisplay(basket);
 
 
 /* let productStorage = "";

@@ -97,6 +97,7 @@ function displayProduct(product) {
             //Si le panier est null, je retourne un tableau vide, pousse un nouveau produit dans le local storage et l'enregistre
             //Sinon si le panier n'est pas vide, je vérifie si le produit enregistré possède le même id et la même couleur que le produit sélectionné
             //Si je trouve le même produit dans le panier alors j'augmente sa quantité selon la quantité choisie par l'utilisateur et j'enregistre le nouveau panier
+            //Sinon la quantité du produit reste inchangé et j'ajoute un nouveau produit dans le local storage et l'enregistre 
             if (basket == null) {
                 basket = [];
                 basket.push(product);
