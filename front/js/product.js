@@ -83,17 +83,20 @@ function displayProduct(product) {
             } else if (selectProduct.quantity == 0 || selectProduct.quantity == "" || selectProduct.quantity > 100) {
                 alert('Veuillez indiquer une quantité correcte')
             } else {
-                //Je récupère mon produit du local storage
                 addToLocalStorage(selectProduct);
                 //Chargement de la page cart
-                //window.location.assign("cart.html");
+                window.location.assign("cart.html");
             }
         }
 
-        //si mon panier est vide, je retourne un tableau vide sinon je recherche si mon produit a le même id et couleur
+        //Fonction qui ajoute des produits dans le local storage
         function addToLocalStorage(product) {
+            //Je récupère le panier
             let basket = JSON.parse(localStorage.getItem("product"));
             console.log(basket);
+            //Si le panier est null, je retourne un tableau vide, pousse un nouveau produit dans le local storage et l'enregistre
+            //Sinon si le panier n'est pas vide, je vérifie si le produit enregistré possède le même id et la même couleur que le produit sélectionné
+            //Si je trouve le même produit dans le panier alors j'augmente sa quantité selon la quantité choisie par l'utilisateur et j'enregistre le nouveau panier
             if (basket == null) {
                 basket = [];
                 basket.push(product);
@@ -109,7 +112,6 @@ function displayProduct(product) {
                 } else {
                     product.quantity = selectProduct.quantity;
                     basket.push(product);
-                    //J'envoie un nouveau produit dans le local storage
                     localStorage.setItem("product", JSON.stringify(basket));
                 }
             };
