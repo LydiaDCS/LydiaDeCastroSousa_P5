@@ -10,7 +10,7 @@ let basketDisplay = async() => {
         for (let product of basket) {
             let cartItem = document.getElementById("cart__items");
             //refaire fetch avec id et recuperer objet avec info
-            /*Je récupére mon produit depuis mon API
+            //Je récupére mon produit depuis mon API
             function fetchApiProduct() {
                 fetch(`http://localhost:3000/api/products/${productId}`)
                     .then((res) => {
@@ -26,7 +26,7 @@ let basketDisplay = async() => {
                         console.log(err);
                     });
             }
-            fetchApiProduct();*/
+            fetchApiProduct();
 
             cartItem.innerHTML +=
                 `<article class="cart__item" data-id="${product.id}" data-color="${product.colors}">

@@ -11,6 +11,7 @@ let description = document.getElementById("description");
 let selectColor = document.querySelector("colors");
 let quantity = document.getElementById("quantity");
 
+
 /*Je récupére mon produit depuis mon API*/
 function fetchApiProduct() {
     fetch(`http://localhost:3000/api/products/${productId}`)
@@ -35,7 +36,7 @@ function displayProduct(product) {
     title.innerText = product.name;
 
     //Insérer image
-    imageUrl.innerText = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+    imageUrl.innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
 
     //Prix
     prix.innerText = product.price;
@@ -64,10 +65,6 @@ function displayProduct(product) {
         //Je récupère les données saisies par l'utilisateur dont mon Id, la couleur et la quantité
         let selectProduct = {
             id: productId,
-            /*  img: product.imageUrl,
-             name: product.name,
-             price: product.price,
-             description: product.description, */
             colors: selectColor.value,
             quantity: quantity.value,
         }
@@ -91,9 +88,10 @@ function displayProduct(product) {
             //Je récupère le panier
             let basket = JSON.parse(localStorage.getItem("product"));
             console.log(basket);
-            //Si le panier est null, je retourne un tableau vide, pousse un nouveau produit dans le local storage et l'enregistre
+            //Si le panier est null, je retourne un tableau vide
             if (basket == null) {
                 basket = [];
+                //Et je pousse un nouveau produit dans le local storage et l'enregistre
                 basket.push(product);
                 localStorage.setItem("product", JSON.stringify(basket));
                 console.log(basket);
@@ -108,7 +106,6 @@ function displayProduct(product) {
                     localStorage.setItem("product", JSON.stringify(basket));
                 } //Sinon la quantité du produit reste inchangé et j'ajoute un nouveau produit dans le local storage et l'enregistre 
                 else {
-                    product.quantity = selectProduct.quantity; //voir si je l'enleve meme chose
                     basket.push(product);
                     localStorage.setItem("product", JSON.stringify(basket));
                 }
