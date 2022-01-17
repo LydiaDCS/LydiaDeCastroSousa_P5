@@ -1,14 +1,32 @@
 //Je récupère mon panier du local storage
 let basket = JSON.parse(localStorage.getItem("product"));
 
-
+//J'affiche mon panier
 let basketDisplay = async() => {
     if (basket) {
-        await basket;
-        console.log(basket);
+        /*   await basket;
+          console.log(basket); */
 
         for (let product of basket) {
             let cartItem = document.getElementById("cart__items");
+            //refaire fetch avec id et recuperer objet avec info
+            /*Je récupére mon produit depuis mon API
+            function fetchApiProduct() {
+                fetch(`http://localhost:3000/api/products/${productId}`)
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                    })
+                    .then((data) => {
+                        console.log(data);
+                        displayProduct(data);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
+            }
+            fetchApiProduct();*/
 
             cartItem.innerHTML +=
                 `<article class="cart__item" data-id="${product.id}" data-color="${product.colors}">
@@ -31,18 +49,35 @@ let basketDisplay = async() => {
                         </div>
                       </div>
                     </div>
-                  </article>`
+                  </article>`;
+
+            //Afficher la quantité et le prix total /*pb ca n'affiche que dernier produit que je mets*/
+
+            let totalQuantity = document.getElementById("totalQuantity");
+            totalQuantity.innerText = Number(product.quantity); //addeventlistener change
+            let totalPrice = document.getElementById("totalPrice");
+            totalPrice.innerText = product.quantity * product.price;
+
+            //Je change la quantité du produit lorsque la quantité est modifiée
+
+            //je supprime un produit du local storage
+            /*let deleteItem = document.getElementsByClassName("deleteItem");
+            deleteItem.addEventListener("click", () => {
+                localStorage.removeItem("product");
+                console.log("je suis la");
+            })*/
+
+            /*modifier prix et validation formulaire*/
         }
     }
-
-
-    let totalQuantity = document.getElementById("totalQuantity");
-    let totalPrice = document.getElementById("totalPrice");
-    let deleteProduct = document.getElementsByClassName("deleteItem");
-
-
+    // si mon panier est vide alors la quantité et le prix sont 0 et message "Aucun article dans le panier"
+    if (basket == null) {
+        document.getElementById("totalQuantity").innerHTML = 0;
+        document.getElementById("totalPrice").innerHTML = 0;
+        document.getElementById("cart__items").innerHTML +=
+            `<h2 style="text-align:center; margin-bottom:80px;">Vous n'avez aucun article dans votre panier</h2>`
+    }
 }
-
 basketDisplay(basket);
 
 

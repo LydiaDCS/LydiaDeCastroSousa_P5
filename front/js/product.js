@@ -1,14 +1,9 @@
 /*Je récupère l'id produit depuis l'Url*/
-
 let params = (new URL(document.location)).searchParams;
 let productId = params.get("id");
 console.log(productId);
 
-/*Je crée un Array Kanape pour y mettre mes datas*/
-let kanape = [];
-
 /*Je déclare mes variables et fait le lien avec ma page html*/
-
 let title = document.getElementById("title");
 let imageUrl = document.querySelector(".item__img");
 let prix = document.getElementById("price");
@@ -25,9 +20,8 @@ function fetchApiProduct() {
             }
         })
         .then((data) => {
-            kanape = data;
-            console.log(kanape);
-            displayProduct(kanape);
+            console.log(data);
+            displayProduct(data);
         })
         .catch((err) => {
             console.log(err);
@@ -36,19 +30,22 @@ function fetchApiProduct() {
 fetchApiProduct();
 
 /*Je modifie les éléments de la page par rapport au produit sélectionné*/
-
 function displayProduct(product) {
     //Nom du produit
-    title.innerHTML = product.name;
+    title.innerText = product.name;
 
     //Insérer image
-    imageUrl.innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+    imageUrl.innerText = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
 
     //Prix
-    prix.innerHTML = product.price;
+    prix.innerText = product.price;
+    // Je change le prix selon la quantité désirée
+    quantity.addEventListener("change", () => {
+        prix.innerText = product.price * quantity.value;
+    })
 
     //Description du produit
-    description.innerHTML = product.description;
+    description.innerText = product.description;
 
     //Je crée une boucle pour le choix des Couleurs
     for (let i = 0; i < product.colors.length; i++) {
@@ -67,10 +64,10 @@ function displayProduct(product) {
         //Je récupère les données saisies par l'utilisateur dont mon Id, la couleur et la quantité
         let selectProduct = {
             id: productId,
-            img: product.imageUrl,
-            name: product.name,
-            price: product.price,
-            description: product.description,
+            /*  img: product.imageUrl,
+             name: product.name,
+             price: product.price,
+             description: product.description, */
             colors: selectColor.value,
             quantity: quantity.value,
         }
@@ -95,23 +92,23 @@ function displayProduct(product) {
             let basket = JSON.parse(localStorage.getItem("product"));
             console.log(basket);
             //Si le panier est null, je retourne un tableau vide, pousse un nouveau produit dans le local storage et l'enregistre
-            //Sinon si le panier n'est pas vide, je vérifie si le produit enregistré possède le même id et la même couleur que le produit sélectionné
-            //Si je trouve le même produit dans le panier alors j'augmente sa quantité selon la quantité choisie par l'utilisateur et j'enregistre le nouveau panier
-            //Sinon la quantité du produit reste inchangé et j'ajoute un nouveau produit dans le local storage et l'enregistre 
             if (basket == null) {
                 basket = [];
                 basket.push(product);
                 localStorage.setItem("product", JSON.stringify(basket));
                 console.log(basket);
-            } else if (basket) {
+            } //Sinon si le panier n'est pas vide, je vérifie si le produit enregistré possède le même id et la même couleur que le produit sélectionné
+            else if (basket) {
                 let getProduct = basket.find(
                     (p) =>
                     selectProduct.id == p.id && selectProduct.colors == p.colors);
+                //Si je trouve le même produit dans le panier alors j'augmente sa quantité selon la quantité choisie par l'utilisateur et j'enregistre le nouveau panier
                 if (getProduct) {
                     getProduct.quantity = Number(selectProduct.quantity) + Number(getProduct.quantity);
                     localStorage.setItem("product", JSON.stringify(basket));
-                } else {
-                    product.quantity = selectProduct.quantity;
+                } //Sinon la quantité du produit reste inchangé et j'ajoute un nouveau produit dans le local storage et l'enregistre 
+                else {
+                    product.quantity = selectProduct.quantity; //voir si je l'enleve meme chose
                     basket.push(product);
                     localStorage.setItem("product", JSON.stringify(basket));
                 }
