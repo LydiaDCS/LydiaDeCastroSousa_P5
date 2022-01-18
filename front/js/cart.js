@@ -2,31 +2,37 @@
 let basket = JSON.parse(localStorage.getItem("product"));
 
 //J'affiche mon panier
-let basketDisplay = async() => {
+let basketDisplay = () => {
     if (basket) {
-        /*   await basket;
-          console.log(basket); */
-
         for (let product of basket) {
-            let cartItem = document.getElementById("cart__items");
             //refaire fetch avec id et recuperer objet avec info
-            //Je récupére mon produit depuis mon API
+            //Je récupére mon panier depuis mon API
             function fetchApiProduct() {
-                fetch(`http://localhost:3000/api/products/${productId}`)
+                fetch(`http://localhost:3000/api/cart`)
                     .then((res) => {
                         if (res.ok) {
                             return res.json();
                         }
                     })
-                    .then((data) => {
-                        console.log(data);
-                        displayProduct(data);
+                    .then((product) => {
+                        let selectProduct = product;
+
+                        selectProduct = {
+                            name: product.name,
+                            img: product.imageUrl,
+                            description: product.description,
+                            id: productId,
+                            colors: selectColor.value,
+                            quantity: quantity.value,
+                        }
                     })
                     .catch((err) => {
                         console.log(err);
                     });
             }
             fetchApiProduct();
+
+            let cartItem = document.getElementById("cart__items");
 
             cartItem.innerHTML +=
                 `<article class="cart__item" data-id="${product.id}" data-color="${product.colors}">
@@ -52,9 +58,15 @@ let basketDisplay = async() => {
                   </article>`;
 
             //Afficher la quantité et le prix total /*pb ca n'affiche que dernier produit que je mets*/
-
+            let itemQuantity = document.getElementsByClassName("itemQuantity");
             let totalQuantity = document.getElementById("totalQuantity");
-            totalQuantity.innerText = Number(product.quantity); //addeventlistener change
+            /*
+                         itemQuantity.addEventListener("change", () => {
+                             totalQuantity = product.quantity * itemQuantity;
+                         }) */
+
+            totalQuantity.innerText = Number(product.quantity); //addeventlistener change 
+            console.log(product.quantity);
             let totalPrice = document.getElementById("totalPrice");
             totalPrice.innerText = product.quantity * product.price;
 
