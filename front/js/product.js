@@ -58,9 +58,7 @@ function displayProduct(product) {
     let addBasket = document.querySelector("#addToCart");
 
     //J'écoute le bouton et envoie les données saisies par l'utilisateur
-    addBasket.addEventListener("click", (event) => {
-        //pour empêcher le lien d'ouvrir un URL
-        event.preventDefault();
+    addBasket.addEventListener("click", () => {
 
         //Je récupère les données saisies par l'utilisateur dont mon Id, la couleur et la quantité
         let selectProduct = {

@@ -5,26 +5,20 @@ let basket = JSON.parse(localStorage.getItem("product"));
 let basketDisplay = () => {
     if (basket) {
         for (let product of basket) {
-            //refaire fetch avec id et recuperer objet avec info
-            //Je récupére mon panier depuis mon API
+            console.log(basket);
+            console.log(product);
+            console.log(product.id);
+            //Je récupére l'Id de mes produits qui sont dans mon panier depuis mon API pour ensuite afficher toutes les caractéristiques des produits
             function fetchApiProduct() {
-                fetch(`http://localhost:3000/api/cart`)
+                fetch(`http://localhost:3000/api/products/` + product.id)
                     .then((res) => {
                         if (res.ok) {
                             return res.json();
                         }
                     })
-                    .then((product) => {
-                        let selectProduct = product;
-
-                        selectProduct = {
-                            name: product.name,
-                            img: product.imageUrl,
-                            description: product.description,
-                            id: productId,
-                            colors: selectColor.value,
-                            quantity: quantity.value,
-                        }
+                    .then((data) => {
+                        console.log(data);
+                        displayRestProduct(data);
                     })
                     .catch((err) => {
                         console.log(err);
@@ -32,30 +26,32 @@ let basketDisplay = () => {
             }
             fetchApiProduct();
 
-            let cartItem = document.getElementById("cart__items");
+            function displayRestProduct(kanap) {
+                let cartItem = document.getElementById("cart__items");
 
-            cartItem.innerHTML +=
-                `<article class="cart__item" data-id="${product.id}" data-color="${product.colors}">
-                    <div class="cart__item__img">
-                      <img src="${product.img}" alt="${product.description}">
-                    </div>
-                    <div class="cart__item__content">
-                      <div class="cart__item__content__description">
-                        <h2>${product.name}</h2>
-                        <p>${product.colors}</p>
-                        <p>${product.price} €</p>
-                      </div>
-                      <div class="cart__item__content__settings">
-                        <div class="cart__item__content__settings__quantity">
-                          <p>Qté :</p>
-                          <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                cartItem.innerHTML +=
+                    `<article class="cart__item" data-id="${product.id}" data-color="${product.colors}">
+                        <div class="cart__item__img">
+                          <img src="${kanap.imageUrl}" alt="${kanap.altText}">
                         </div>
-                        <div class="cart__item__content__settings__delete">
-                          <p class="deleteItem">Supprimer</p>
+                        <div class="cart__item__content">
+                          <div class="cart__item__content__description">
+                            <h2>${kanap.name}</h2>
+                            <p>${product.colors}</p>
+                            <p>${kanap.price} €</p>
+                          </div>
+                          <div class="cart__item__content__settings">
+                            <div class="cart__item__content__settings__quantity">
+                              <p>Qté :</p>
+                              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                            </div>
+                            <div class="cart__item__content__settings__delete">
+                              <p class="deleteItem">Supprimer</p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </article>`;
+                      </article>`;
+            }
 
             //Afficher la quantité et le prix total /*pb ca n'affiche que dernier produit que je mets*/
             let itemQuantity = document.getElementsByClassName("itemQuantity");
