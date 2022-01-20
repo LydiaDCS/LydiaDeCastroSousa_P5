@@ -1,5 +1,7 @@
 //Je récupère mon panier du local storage
 let basket = JSON.parse(localStorage.getItem("product"));
+let itemQuantity = document.getElementsByClassName("itemQuantity");
+let totalQuantity = document.getElementById("totalQuantity");
 
 //J'affiche mon panier
 let basketDisplay = () => {
@@ -8,6 +10,7 @@ let basketDisplay = () => {
             console.log(basket);
             console.log(product);
             console.log(product.id);
+
             //Je récupére l'Id de mes produits qui sont dans mon panier depuis mon API pour ensuite afficher toutes les caractéristiques des produits
             function fetchApiProduct() {
                 fetch(`http://localhost:3000/api/products/` + product.id)
@@ -51,17 +54,29 @@ let basketDisplay = () => {
                           </div>
                         </div>
                       </article>`;
+
+                //Affichage du prix selon la quantité - pb avec addEventListener
+                let price = kanap.price;
+                console.log(price);
+                let quantity = product.quantity;
+                console.log(quantity);
+                quantity.addEventListener("change", () => {
+                    price.innerText = kanap.price * product.quantity;
+                })
+
+                //Afficher la quantité et le prix total 
+                itemQuantity.addEventListener("change", () => {
+
+                    totalQuantity = quantity * totalQuantity;
+
+                })
+
             }
 
-            //Afficher la quantité et le prix total /*pb ca n'affiche que dernier produit que je mets*/
-            let itemQuantity = document.getElementsByClassName("itemQuantity");
-            let totalQuantity = document.getElementById("totalQuantity");
-            /*
-                         itemQuantity.addEventListener("change", () => {
-                             totalQuantity = product.quantity * itemQuantity;
-                         }) */
 
-            totalQuantity.innerText = Number(product.quantity); //addeventlistener change 
+
+
+            totalQuantity.innerText = Number(totalQuantity) + Number(product.quantity); //addeventlistener change 
             console.log(product.quantity);
             let totalPrice = document.getElementById("totalPrice");
             totalPrice.innerText = product.quantity * product.price;
