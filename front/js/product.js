@@ -40,6 +40,7 @@ function displayProduct(product) {
 
     //Prix
     prix.innerText = product.price;
+
     // Je change le prix selon la quantité désirée
     quantity.addEventListener("change", () => {
         prix.innerText = product.price * quantity.value;
