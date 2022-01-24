@@ -34,7 +34,22 @@ let basketDisplay = () => {
             }
             fetchApiProduct();
 
+            //J'affiche mes produits présents dans le localStorage
             function displayRestProduct(kanap) {
+
+                //Je crée un nouvel objet en récupérant mes informations du local storage et en ajoutant le prix
+                let productBasket = {
+                    id: product.id,
+                    quantity: product.quantity,
+                    colors: product.colors,
+                    price: kanap.price,
+                }
+                console.log(productBasket);
+
+                //J'affiche le prix selon la quantité enregistrée dans le local storage
+                productBasket.price = kanap.price * product.quantity;
+                console.log(productBasket.price);
+
                 let cartItem = document.getElementById("cart__items");
 
                 cartItem.innerHTML +=
@@ -46,12 +61,12 @@ let basketDisplay = () => {
                           <div class="cart__item__content__description">
                             <h2>${kanap.name}</h2>
                             <p>${product.colors}</p>
-                            <p>${kanap.price} €</p>
+                            <p>${productBasket.price} €</p>
                           </div>
                           <div class="cart__item__content__settings">
                             <div class="cart__item__content__settings__quantity">
                               <p>Qté :</p>
-                              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${productBasket.quantity}">
                             </div>
                             <div class="cart__item__content__settings__delete">
                               <p class="deleteItem">Supprimer</p>
@@ -60,26 +75,25 @@ let basketDisplay = () => {
                         </div>
                       </article>`;
 
-                let price = kanap.price;
-                console.log(price);
-                console.log(product.quantity);
-                let quant = document.querySelector(".itemQuantity").value;
 
-                //J'affiche le prix selon la quantité 
-                quant.addEventListener("change", () => {
-                    price.innerText = kanap.price * quant.value;
-                })
+                //J'affiche le prix selon la quantité modifiée
 
-                console.log(product.quantity);
-                console.log(quant);
 
-                /* 
-                                //J'affiche la quantité totale 
-                                quantity.addEventListener("change", (event) => {
-                                    event.preventDefault();
-                                    document.getElementById("totalQuantity").innerText = Number(product.quantity) + Number(totalQuantity);
-                                })
-                 */
+
+                //Si je modifie la quantité, je mets à jour la quantité dans le local storage et j'affiche le nouveaux prix
+
+
+
+                /* //J'affiche la quantité totale 
+                 quantity.addEventListener("change", (event) => {
+                     event.preventDefault();
+                     document.getElementById("totalQuantity").innerText = Number(product.quantity) + Number(totalQuantity);
+                     localStorage.setItem("element", JSON.stringify(basket));
+                     JSON.parse(localStorage.getItem("product"));
+                     console.log("yes");
+
+                 }) */
+
                 /* //J'afffiche le prix total
                 price.addEventListener("change", () => {
                     document.getElementById("totalPrice").innerText = Number(totalPrice) + Number(price);
@@ -93,18 +107,18 @@ let basketDisplay = () => {
             }
 
 
-
-
-
-
-
             /*   //je supprime un produit du local storage
-              let deleteItem = document.getElementsByClassName("deleteItem");
-              deleteItem.addEventListener("click", () => {
-                  localStorage.removeItem("product");
-                  console.log("je suis la");
-              }) */
+                          let deleteItem = document.getElementsByClassName("deleteItem");
+                          deleteItem.addEventListener("click", () => {
+                              if (quantity.id && quantity.colors){
+            localStorage.removeItem("product");
+                              console.log("je suis la");
+                              }
+                              
+                          }) */
         }
+
+
 
         /* //Formulaire Utilisateur
         //Je récupère les balises d'input du formulaire
@@ -126,4 +140,5 @@ let basketDisplay = () => {
 
     }
 }
+
 basketDisplay();
