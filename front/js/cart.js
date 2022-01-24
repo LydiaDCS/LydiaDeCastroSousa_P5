@@ -75,13 +75,36 @@ let basketDisplay = () => {
                         </div>
                       </article>`;
 
-
-                //J'affiche le prix selon la quantité modifiée
-
-
-
                 //Si je modifie la quantité, je mets à jour la quantité dans le local storage et j'affiche le nouveaux prix
+                console.log(productBasket.quantity);
 
+                let quantity = document.getElementsByClassName("itemQuantity");
+                console.log(quantity);
+
+
+                /* quantity.addEventListener("change", (recal) => {
+                    console.log("jesuisla");
+                    basket;
+                    productBasket.quantity += quantity[i];
+                    localStorage.setItem("product", JSON.stringify(basket));
+
+
+                }) */
+
+
+                function recal(productBasket) {
+                    productBasket.price = productBasket.price * productBasket.quantity;
+                }
+
+
+                document.querySelectorAll(".itemQuantity").forEach(element => {
+                    element.addEventListener("change", (recal) => {
+                        basket;
+                        productBasket.quantity.innerText = product.quantity;
+                        localStorage.setItem("product", JSON.stringify(basket));
+                    })
+
+                })
 
 
                 /* //J'affiche la quantité totale 
@@ -107,7 +130,7 @@ let basketDisplay = () => {
             }
 
 
-            /*   //je supprime un produit du local storage
+            /*   //je supprime un produit du local storage -- utiliser closest ?
                           let deleteItem = document.getElementsByClassName("deleteItem");
                           deleteItem.addEventListener("click", () => {
                               if (quantity.id && quantity.colors){
