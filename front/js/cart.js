@@ -1,6 +1,5 @@
 //Je récupère mon panier du local storage
-let basket = [];
-basket = JSON.parse(localStorage.getItem("product"));
+let basket = JSON.parse(localStorage.getItem("product"));
 
 //Je récupère les informations saisies par l'utilisateur
 let contact = {
@@ -14,7 +13,7 @@ let contact = {
 //J'affiche mon panier
 let basketDisplay = () => {
     // si mon panier est vide alors la quantité et le prix sont 0 et message "Aucun article dans le panier"
-    if (basket == null) {
+    if (basket == null || basket == 0) {
         document.getElementById("totalQuantity").innerText = 0;
         document.getElementById("totalPrice").innerText = 0;
         document.getElementById("cart__items").innerHTML +=
@@ -27,6 +26,7 @@ let basketDisplay = () => {
             console.log(product);
             console.log(product.id);
 
+            //Fonction qui récupère l'Id du produit depuis l'API
             function fetchApiProduct() {
                 fetch(`http://localhost:3000/api/products/` + product.id)
                     .then((res) => {
@@ -36,6 +36,7 @@ let basketDisplay = () => {
                     })
                     .then((data) => {
                         console.log(data);
+                        //J'affiche toutes les caractéristiques des produits
                         displayRestProduct(data);
                     })
                     .catch((err) => {
@@ -47,30 +48,33 @@ let basketDisplay = () => {
             //J'affiche mes produits présents dans le localStorage
             function displayRestProduct(kanap) {
 
-                //Je crée un nouvel objet en récupérant mes informations du local storage et en ajoutant le prix
+                //Je crée un nouvel objet en récupérant mes informations du local storage et en ajoutant les autres informations dont le prix
                 let productBasket = {
                     id: product.id,
+                    name: kanap.name,
+                    imageUrl: kanap.imageUrl,
+                    altText: kanap.altText,
                     quantity: product.quantity,
                     colors: product.colors,
                     price: kanap.price,
                 }
                 console.log(productBasket);
 
-                //J'affiche le prix selon la quantité enregistrée dans le local storage
-                productBasket.price = kanap.price * product.quantity;
-                console.log(productBasket.price);
+                /*  //J'affiche le prix selon la quantité enregistrée dans le local storage
+                 productBasket.price = productBasket.price * productBasket.quantity;
+                 console.log(productBasket.price); */
 
                 let cartItem = document.getElementById("cart__items");
 
                 cartItem.innerHTML +=
-                    `<article class="cart__item" data-id="${product.id}" data-color="${product.colors}">
+                    `<article class="cart__item" data-id="${productBasket.id}" data-color="${productBasket.colors}">
                         <div class="cart__item__img">
-                          <img src="${kanap.imageUrl}" alt="${kanap.altText}">
+                          <img src="${productBasket.imageUrl}" alt="${productBasket.altText}">
                         </div>
                         <div class="cart__item__content">
                           <div class="cart__item__content__description">
-                            <h2>${kanap.name}</h2>
-                            <p>${product.colors}</p>
+                            <h2>${productBasket.name}</h2>
+                            <p>${productBasket.colors}</p>
                             <p>${productBasket.price} €</p>
                           </div>
                           <div class="cart__item__content__settings">
@@ -85,109 +89,94 @@ let basketDisplay = () => {
                         </div>
                       </article>`;
 
-                /*  //Si je modifie la quantité, je mets à jour la quantité dans le local storage et j'affiche le nouveaux prix
-                function modifieQuantity() {
+                //Fonction qui calcule le total des quantités et le total des prix
+
+                function getTotals() {
+                    //Récupération du total des quantités
+                    let quantityProduct = document.getElementsByClassName("itemQuantity");
+                    let totalQtt = 0;
+
+                    for (let i = 0; i < quantityProduct.length; ++i) {
+                        totalQtt += quantityProduct[i].valueAsNumber;
+                    }
+                    let productTotalQuantity = document.getElementById("totalQuantity");
+                    productTotalQuantity.innerText = totalQtt;
+                    console.log(totalQtt);
+
+                    /* if (quantityProduct == 0) {
+                        localStorage.removeItem("basket");
+                        basket = null;
+                    } */
+
+                    //Récupération du prix total 
+                    let priceProduct = document.getElementsByClassName("cart__item__content__description p p") //utiliser closest?
+                    console.log(priceProduct);
+                    let totalPrice = 0;
+                    for (let i = 0; i < quantityProduct.length; ++i) {
+                        totalPrice += (quantityProduct[i].valueAsNumber * productBasket.price);
+                    }
+                    let productTotalPrice = document.getElementById("totalPrice");
+                    productTotalPrice.innerText = totalPrice;
+                    console.log(totalPrice);
+
+                }
+                getTotals();
+
+                //Modification d'une quantité de produit --Revoir
+                function modifyQuantity() {
                     let quantityModif = document.querySelectorAll(".itemQuantity");
+
                     for (let k = 0; k < quantityModif.lengh; k++) {
                         quantityModif[k].addEventListener("change", (event) => {
                             event.preventDefault();
 
                             //Sélection de l'élément à modif selon id et couleur
-                            let qtModif = basket[k].product.quantity;
+                            let qtModif = productBasket.quantity;
                             console.log(qtModif);
-                            let quantityModifValue = parseInt(quantityModif[k]);
+                            let quantityModifValue = quantityModif[k].valueAsNumber;
                             console.log(quantityModifValue);
 
-                            let findresult = basket.find((el) => el.quantityModifValue !== qtModif);
-                            findresult.quan
+                            let findResult = basket.find((el) => el.quantityModifValue !== qtModif);
+                            basket[k].productBasket.quantity = findResult.productBasket.quantity;
+                            localStorage.setItem("product", JSON.stringify(basket));
+
+                            //Rafraichissement de la page
+                            location.reload();
 
                         })
                     }
                 }
-                modifieQuantity();
-
-                let quantity = productBasket.quantity;
-                console.log(quantity);
-
-                function recal(productBasket) {
-                    productBasket.price = productBasket.price * productBasket.quantity;
-                }
-
-                document.querySelectorAll(".itemQuantity").forEach(element => {
-                    element.addEventListener("change", (recal) => {
-                        console.log("jesuisla");
-                        basket;
-                        productBasket.quantity.innerText = product.quantity;
-                        localStorage.setItem("product", JSON.stringify(basket));
-                    })
-
-                })
-
-                //Je définie la quantité total de produits dans le panier
-                let totalQuantity = 0;
-                for (let i = 0; i < quantity.lengh; i++) {
-                    totalQuantity += parseInt(quantity[i]);
-                }
-
-                let productTotalQuantity = document.getElementById("totalQuantity");
-                productTotalQuantity.innerHTML = totalQuantity;
-                console.log(totalQuantity);
-
-
- */
-                /* //J'affiche la quantité totale 
-                 quantity.addEventListener("change", (event) => {
-                     event.preventDefault();
-                     document.getElementById("totalQuantity").innerText = Number(product.quantity) + Number(totalQuantity);
-                     localStorage.setItem("element", JSON.stringify(basket));
-                     JSON.parse(localStorage.getItem("product"));
-                     console.log("yes");
-
-                 }) */
-
-                /* //J'afffiche le prix total
-                price.addEventListener("change", () => {
-                    document.getElementById("totalPrice").innerText = Number(totalPrice) + Number(price);
-                })*/
-
-
-                /*  totalQuantity.innerText = parseInt(totalQuantity) + parseInt(product.quantity); //addeventlistener change 
-                 console.log(product.quantity);
-                 let totalPrice = document.getElementById("totalPrice");
-                 totalPrice.innerText = parseInt(product.quantity) * parseInt(product.price); */
+                modifyQuantity();
             }
 
-            /* 
-                        //Je supprime un produit du local storage
-                        function deleteProduct() {
-                            let deleteButton = document.getElementsByClassName("deleteItem");
+            //Je supprime un produit --revoir
+            function deleteProduct() {
+                let deleteButton = document.getElementsByClassName("deleteItem");
 
-                            for (let j = 0; j < deleteButton.length; j++) {
-                                deleteButton[j].addEventListener("click", (event) => {
-                                    event.preventDefault();
+                for (let j = 0; j < deleteButton.length; j++) {
+                    deleteButton[j].addEventListener("click", (event) => {
+                        event.preventDefault();
 
-                                    //Sélection de l'élément à supprimer en fonction de son id et de sa couleur
-                                    let idDelete = basket[j].product.id;
-                                    console.log(idDelete);
-                                    let colorDelete = basket[j].product.colors;
+                        //Sélection de l'élément à supprimer en fonction de son id et de sa couleur
+                        let idDelete = basket[j].product.id;
+                        console.log(idDelete);
+                        let colorDelete = basket[j].product.colors;
 
-                                    basket = basket.filter(el => el.product.id !== idDelete || el.product.colors !== colorDelete);
+                        basket = basket.filter(el => el.product.id !== idDelete || el.product.colors !== colorDelete);
 
-                                    localStorage.setItem("product", JSON.stringify(basket));
+                        localStorage.setItem("product", JSON.stringify(basket));
 
-                                    //Alerte produit supprimé et actualisé
-                                    alert("Ce produit a bien été supprimé du panier");
-                                    window.location();
+                        //Alerte produit supprimé et actualisé
+                        alert("Ce produit a bien été supprimé du panier");
+                        window.location();
 
-                                })
-                            }
+                    })
+                }
 
-                        }
-                        deleteProduct(); */
+            }
+            deleteProduct();
 
         }
-
-
 
         //-------------------------------Formulaire Utilisateur--------------------------------------
         //Je récupère les balises d'input du formulaire
@@ -318,10 +307,10 @@ let basketDisplay = () => {
                 });
 
             }
-
+            //J'envoie le formulaire
+            sendData();
 
         })
-        sendData();
 
     }
 }
