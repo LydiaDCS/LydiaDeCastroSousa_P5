@@ -10,6 +10,9 @@ let contact = {
     email: "",
 };
 
+//Je crée un tableau pour récupérer les produits
+let products = [];
+
 //J'affiche mon panier
 let basketDisplay = () => {
     // si mon panier est vide alors la quantité et le prix sont 0 et message "Aucun article dans le panier"
@@ -60,9 +63,9 @@ let basketDisplay = () => {
                 }
                 console.log(productBasket);
 
-                /*  //J'affiche le prix selon la quantité enregistrée dans le local storage
-                 productBasket.price = productBasket.price * productBasket.quantity;
-                 console.log(productBasket.price); */
+                //J'affiche le prix selon la quantité enregistrée dans le local storage
+                productBasket.price = productBasket.price * productBasket.quantity;
+                console.log(productBasket.price);
 
                 let cartItem = document.getElementById("cart__items");
 
@@ -108,13 +111,13 @@ let basketDisplay = () => {
                         basket = null;
                     } */
 
-                    //Récupération du prix total 
-                    let priceProduct = document.getElementsByClassName("cart__item__content__description p p") //utiliser closest?
-                    console.log(priceProduct);
+                    //Récupération du prix total --revoir prix ne va pas comme pas dans le local storage donc je n'arrive pas à le cibler
                     let totalPrice = 0;
                     for (let i = 0; i < quantityProduct.length; ++i) {
-                        totalPrice += (quantityProduct[i].valueAsNumber * productBasket.price);
+                        totalPrice += productBasket.price++;
                     }
+                    console.log(productBasket.quantity);
+                    console.log(productBasket.price);
                     let productTotalPrice = document.getElementById("totalPrice");
                     productTotalPrice.innerText = totalPrice;
                     console.log(totalPrice);
@@ -122,29 +125,54 @@ let basketDisplay = () => {
                 }
                 getTotals();
 
-                //Modification d'une quantité de produit --Revoir
+                //Modification d'une quantité d'un produit --Revoir
                 function modifyQuantity() {
+                    //Je cible la quantité à modifier
                     let quantityModif = document.querySelectorAll(".itemQuantity");
 
-                    for (let k = 0; k < quantityModif.lengh; k++) {
-                        quantityModif[k].addEventListener("change", (event) => {
-                            event.preventDefault();
+                    //Je remonte l'article
+                    quantityModif.forEach((item) => {
+                        const itemCloset = item.closest("article");
+                        //Je récupère l'id du parent article
+                        const id = itemCloset.dataset.id;
+                        console.log(id);
 
-                            //Sélection de l'élément à modif selon id et couleur
-                            let qtModif = productBasket.quantity;
-                            console.log(qtModif);
-                            let quantityModifValue = quantityModif[k].valueAsNumber;
-                            console.log(quantityModifValue);
+                        //Je récupère la couleur du parent article
+                        const color = itemCloset.dataset.color;
+                        console.log(color);
 
-                            let findResult = basket.find((el) => el.quantityModifValue !== qtModif);
-                            basket[k].productBasket.quantity = findResult.productBasket.quantity;
-                            localStorage.setItem("product", JSON.stringify(basket));
+                        //J'écoute item lorsque celui-ci change
+                        item.addEventListener("change", () => {
+                            for (let p of basket) {
 
-                            //Rafraichissement de la page
-                            location.reload();
+                                itemCloset.dataset.id == p.id && itemCloset.dataset.color == p.colors;
+                                quantityModif++;
+                                localStorage.setItem("product", JSON.stringify(basket));
+                            }
 
                         })
-                    }
+                    })
+
+                    /* 
+                                        for (let k = 0; k < quantityModif.lengh; k++) {
+                                            quantityModif[k].addEventListener("change", (event) => {
+                                                event.preventDefault();
+
+                                                //Sélection de l'élément à modif selon id et couleur
+                                                let qtModif = productBasket.quantity;
+                                                console.log(qtModif);
+                                                let quantityModifValue = quantityModif[k].valueAsNumber;
+                                                console.log(quantityModifValue);
+
+                                                let findResult = basket.find((el) => el.quantityModifValue !== qtModif);
+                                                basket[k].productBasket.quantity = findResult.productBasket.quantity;
+                                                localStorage.setItem("product", JSON.stringify(basket));
+
+                                                //Rafraichissement de la page
+                                                location.reload();
+
+                                            })
+                                        } */
                 }
                 modifyQuantity();
             }
@@ -157,6 +185,7 @@ let basketDisplay = () => {
                     deleteButton[j].addEventListener("click", (event) => {
                         event.preventDefault();
 
+                        deleteButton.closest("article");
                         //Sélection de l'élément à supprimer en fonction de son id et de sa couleur
                         let idDelete = basket[j].product.id;
                         console.log(idDelete);
@@ -291,9 +320,31 @@ let basketDisplay = () => {
 
         //Je récupère le bouton de soumission du formulaire
         submitButton = document.querySelector("#order");
-        //AddEventListener qui fonction seulement si tous les champs sont correctement remplis
+        //AddEventListener qui fonctionne seulement si tous les champs sont correctement remplis
         submitButton.addEventListener("click", (e) => {
             e.preventDefault();
+            let message = "";
+
+            //Fonction qui envoie les id de tous les produits dans un tableau products
+            function collectDatas() {
+                for (let productBasket of basket) {
+                    products.push(productBasket.id);
+                }
+            }
+
+            //Fonction qui vérifie si tous les champs sont valides
+            function verify() {
+                if (validForm) {
+                    if (basket) {
+                        message.innerHTML = "Votre commande est en cours";
+                        collectDatas();
+                        sendData();
+
+                    } else {
+                        message.innerHTML = "Votre panier est vide"
+                    }
+                }
+            }
 
             //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
             async function sendData() {
@@ -303,12 +354,11 @@ let basketDisplay = () => {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(contact, basket)
+                    body: JSON.stringify(contact, products)
                 });
 
             }
-            //J'envoie le formulaire
-            sendData();
+
 
         })
 
