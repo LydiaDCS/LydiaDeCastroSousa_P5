@@ -63,9 +63,9 @@ let basketDisplay = () => {
                 }
                 console.log(productBasket);
 
-                //J'affiche le prix selon la quantité enregistrée dans le local storage
-                productBasket.price = productBasket.price * productBasket.quantity;
-                console.log(productBasket.price);
+                /*  //J'affiche le prix selon la quantité enregistrée dans le local storage
+                 productBasket.price = productBasket.price * productBasket.quantity;
+                 console.log(productBasket.price); */
 
                 let cartItem = document.getElementById("cart__items");
 
@@ -106,21 +106,15 @@ let basketDisplay = () => {
                     productTotalQuantity.innerText = totalQtt;
                     console.log(totalQtt);
 
-                    /* if (quantityProduct == 0) {
-                        localStorage.removeItem("basket");
-                        basket = null;
-                    } */
-
                     //Récupération du prix total --revoir prix ne va pas comme pas dans le local storage donc je n'arrive pas à le cibler
+                    let price = document.querySelectorAll(".cart__item__content__description p")[1];
+                    console.log(price[1]);
                     let totalPrice = 0;
-                    for (let i = 0; i < quantityProduct.length; ++i) {
-                        totalPrice += productBasket.price++;
+                    for (let j = 0; j < price.length; ++j) {
+                        totalPrice += price[i];
                     }
-                    console.log(productBasket.quantity);
-                    console.log(productBasket.price);
                     let productTotalPrice = document.getElementById("totalPrice");
                     productTotalPrice.innerText = totalPrice;
-                    console.log(totalPrice);
 
                 }
                 getTotals();
@@ -143,8 +137,7 @@ let basketDisplay = () => {
 
                         //J'écoute item lorsque celui-ci change
                         item.addEventListener("change", () => {
-                            for (let p of basket) {
-
+                            for (let item of itemCloset) {
                                 itemCloset.dataset.id == p.id && itemCloset.dataset.color == p.colors;
                                 quantityModif++;
                                 localStorage.setItem("product", JSON.stringify(basket));
