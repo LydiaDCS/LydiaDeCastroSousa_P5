@@ -129,19 +129,21 @@ let basketDisplay = () => {
                     //Je cible la quantité à modifier
                     let quantityModif = document.querySelectorAll(".itemQuantity");
 
-                    //Je remonte l'article
+                    //Boucle sur les quantités à modifier
                     quantityModif.forEach((item) => {
-                        const itemCloset = item.closest("article");
-                        //Je récupère l'id du parent article
-                        const id = itemCloset.dataset.id;
-                        console.log(id);
-
-                        //Je récupère la couleur du parent article
-                        const color = itemCloset.dataset.color;
-                        console.log(color);
 
                         //J'écoute item lorsque celui-ci change
                         item.addEventListener("change", () => {
+
+                            //
+                            const itemCloset = item.closest("article");
+                            //Je récupère l'id du parent article
+                            const id = itemCloset.dataset.id;
+                            console.log(id);
+
+                            //Je récupère la couleur du parent article
+                            const color = itemCloset.dataset.color;
+                            console.log(color);
                             const resultFind = item.find((item) => itemCloset.dataset.id == item.id && itemCloset.dataset.color == item.colors);
                             if (resultFind) {
                                 resultFind.quantityModif = quantityProduct[i].valueAsNumber;
@@ -165,7 +167,7 @@ let basketDisplay = () => {
                         // écoute du clic le bouton supprimer ciblé
                         item.addEventListener("click", (event) => {
 
-                            // on attrape la div article englobant le bouclé supprimer cliqué
+                            // on attrape la div article englobant le bouton supprimer 
                             let cart = item.closest("article");
 
                             //  on récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
@@ -184,6 +186,9 @@ let basketDisplay = () => {
                             //Appeler la fonction qui calcule le total des quantités et le total des prix
                             getTotals();
 
+                            //Alerte pour avertir que le produit va être supprimé du panier
+                            alert("Ce produit va être supprimé de votre panier");
+                            window.location();
                         });
                     });
                 }
