@@ -95,27 +95,33 @@ let basketDisplay = () => {
                 //Fonction qui calcule le total des quantités et le total des prix
 
                 function getTotals() {
-                    //Récupération du total des quantités
+                    //Je crée mes variables en ciblant le texte HTML
                     let quantityProduct = document.getElementsByClassName("itemQuantity");
-                    let totalQtt = 0;
-
-                    for (let i = 0; i < quantityProduct.length; ++i) {
-                        totalQtt += quantityProduct[i].valueAsNumber;
-                    }
+                    console.log(quantityProduct);
                     let productTotalQuantity = document.getElementById("totalQuantity");
-                    productTotalQuantity.innerText = totalQtt;
-                    console.log(totalQtt);
-
-                    //Récupération du prix total --revoir prix ne va pas comme pas dans le local storage donc je n'arrive pas à le cibler
-                    let price = document.querySelectorAll(".cart__item__content__description p")[1];
-                    console.log(price[1]);
-                    let totalPrice = 0;
-                    for (let j = 0; j < price.length; ++j) {
-                        totalPrice += price[i];
-                    }
+                    let priceDiv = document.querySelectorAll(".cart__item__content__description p:last-child");
                     let productTotalPrice = document.getElementById("totalPrice");
-                    productTotalPrice.innerText = totalPrice;
 
+                    //J'initialise mes variables de quantités totales
+                    let totalQtt = 0;
+                    let totalPrice = 0;
+
+                    //Je crée une boucle qui parcourt chaque quantity de produit
+                    for (let i = 0; i < quantityProduct.length; ++i) {
+                        let quantity = quantityProduct[i].valueAsNumber;
+                        console.log(quantity);
+                        let price = priceDiv[i].innerText.replace('€', '');
+
+                        //Je convertis price en nombre
+                        let priceNumber = Number(price);
+                        console.log(priceNumber);
+
+                        totalQtt += quantity;
+                        totalPrice += priceNumber * quantity;
+                    }
+
+                    productTotalQuantity.innerText = totalQtt;
+                    productTotalPrice.innerText = totalPrice;
                 }
                 getTotals();
 
