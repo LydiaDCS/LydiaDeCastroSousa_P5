@@ -10,8 +10,8 @@ let contact = {
     email: "",
 };
 
-//Je crée un tableau pour récupérer les produits
-let products = [];
+//Je crée un tableau pour récupérer les id des produits
+let arrayId = [];
 
 //J'affiche mon panier
 let basketDisplay = () => {
@@ -124,75 +124,76 @@ let basketDisplay = () => {
                     productTotalPrice.innerText = totalPrice;
                 }
                 getTotals();
-
-                //Modification d'une quantité d'un produit ------------ Revoir
-                function modifyQuantity() {
-                    //Je cible la quantité à modifier
-                    let quantityModif = document.querySelectorAll(".itemQuantity");
-
-                    //Je remonte l'article
-                    quantityModif.forEach((item) => {
-                        const itemCloset = item.closest("article");
-                        //Je récupère l'id du parent article
-                        const id = itemCloset.dataset.id;
-                        console.log(id);
-
-                        //Je récupère la couleur du parent article
-                        const color = itemCloset.dataset.color;
-                        console.log(color);
-
-                        //J'écoute item lorsque celui-ci change
-                        item.addEventListener("change", () => {
-                            const resultFind = item.find((item) => itemCloset.dataset.id == item.id && itemCloset.dataset.color == item.colors);
-                            if (resultFind) {
-                                resultFind.quantityModif = quantityProduct[i].valueAsNumber;
-                            }
-                            localStorage.setItem("product", JSON.stringify(basket));
-
-
-                        })
-                    })
-                }
-                modifyQuantity();
-
-                //Je supprime un produit ------- revoir
-                function deleteProduct() {
-                    //Je cible mes boutons supprimer
-                    let deleteButton = document.getElementsByClassName("deleteItem");
-                    console.log(deleteButton);
-
-                    deleteButton.forEach((item) => {
-                            let deleteProduct = deleteButton.closest("article");
-                            //Sélection de l'élément à supprimer en fonction de son Id et de sa couleur
-                            let idDelete = item.dataset.id;
-                            console.log(idDelete);
-                            let colorDelete = item.dataset.colors;
-                            console.log(colorDelete);
-
-                            product.addEventListener("click", (event) => {
-                                event.preventDefault();
-                                basket = basket.filter((element) => element.id !== idDelete || element.colors == !colorDelete);
-                                element.remove();
-                                //J'enregistre mon panier
-                                localStorage.setItem("element", JSON.stringify(basket));
-                            })
-
-                        })
-                        /* //Alerte produit supprimé et actualisé
-                        alert("Ce produit a bien été supprimé du panier");
-                        window.location(); */
-                }
-                deleteProduct();
-
             }
 
         }
 
+        //Modification d'une quantité d'un produit ------------ Revoir
+        function modifyQuantity() {
+            //Je cible la quantité à modifier
+            let quantityModif = document.querySelectorAll(".itemQuantity");
+
+            //Je remonte l'article
+            quantityModif.forEach((item) => {
+                const itemCloset = item.closest("article");
+                //Je récupère l'id du parent article
+                const id = itemCloset.dataset.id;
+                console.log(id);
+
+                //Je récupère la couleur du parent article
+                const color = itemCloset.dataset.color;
+                console.log(color);
+
+                //J'écoute item lorsque celui-ci change
+                item.addEventListener("change", () => {
+                    const resultFind = item.find((item) => itemCloset.dataset.id == item.id && itemCloset.dataset.color == item.colors);
+                    if (resultFind) {
+                        resultFind.quantityModif = quantityProduct[i].valueAsNumber;
+                    }
+                    localStorage.setItem("product", JSON.stringify(basket));
+
+
+                })
+            })
+        }
+        modifyQuantity();
+
+        //Fonction qui supprime un produit  ------- revoir
+        function deleteProduct() {
+            //Je cible mes boutons supprimer
+            let deleteButton = document.querySelectorAll(".deleteItem");
+
+            // boucle sur les boutons supprimer
+            deleteButton.forEach((item) => {
+
+                // écoute du clic le bouton supprimer ciblé
+                item.addEventListener("click", (event) => {
+
+                    // on attrape la div article englobant le bouclé supprimer cliqué
+                    let cart = item.closest("article");
+
+                    //  on récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
+                    let idDelete = cart.dataset.id;
+                    let colorDelete = cart.dataset.color;
+
+                    // on retire l'élément cliqué du tableau basket
+                    basket = basket.filter((element) => element.id !== idDelete || element.colors !== colorDelete);
+
+                    //on push basket dans le storage
+                    localStorage.setItem("product", JSON.stringify(basket));
+
+                    // on retive la div cart du dom
+                    cart.remove();
+
+                });
+            });
+        }
+
+        deleteProduct();
+
     }
 
 }
-
-
 
 //-------------------------------Formulaire Utilisateur--------------------------------------
 //Je récupère les balises d'input du formulaire
@@ -244,9 +245,8 @@ function validLastName(lastName) {
     } else if (/[0-9]/.test(lastName)) {
         errLastName.innerHTML = "Votre nom ne peut pas contenir de chiffre";
     } else {
-        errlastName.innerHTML = "";
+        errLastName.innerHTML = "";
         return /^[a-zA-Z\-]+$/.test(lastName);
-
     }
 }
 
@@ -314,8 +314,8 @@ submitButton.addEventListener("click", (e) => {
 
     //Fonction qui envoie les id de tous les produits dans un tableau products
     function collectDatas() {
-        for (let productBasket of basket) {
-            products.push(productBasket.id);
+        for (let product of basket) {
+            arrayId.push(product.id);
         }
     }
 
@@ -341,11 +341,12 @@ submitButton.addEventListener("click", (e) => {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(contact, products)
+            body: JSON.stringify(contact, arrayId)
         });
 
     }
-
+    localStorage.setItem("contact", JSON.stringify(contact));
+    localStorage.setItem("arrayId", JSON.stringify(arrayId));
 })
 
 basketDisplay()
