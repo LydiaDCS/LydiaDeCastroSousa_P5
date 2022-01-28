@@ -125,7 +125,7 @@ let basketDisplay = () => {
                 }
                 getTotals();
 
-                //Modification d'une quantité d'un produit --Revoir
+                //Modification d'une quantité d'un produit ------------ Revoir
                 function modifyQuantity() {
                     //Je cible la quantité à modifier
                     let quantityModif = document.querySelectorAll(".itemQuantity");
@@ -143,225 +143,209 @@ let basketDisplay = () => {
 
                         //J'écoute item lorsque celui-ci change
                         item.addEventListener("change", () => {
-                            for (let item of itemCloset) {
-                                itemCloset.dataset.id == p.id && itemCloset.dataset.color == p.colors;
-                                quantityModif++;
-                                localStorage.setItem("product", JSON.stringify(basket));
+                            const resultFind = item.find((item) => itemCloset.dataset.id == item.id && itemCloset.dataset.color == item.colors);
+                            if (resultFind) {
+                                resultFind.quantityModif = quantityProduct[i].valueAsNumber;
                             }
+                            localStorage.setItem("product", JSON.stringify(basket));
+
 
                         })
                     })
-
-                    /* 
-                                        for (let k = 0; k < quantityModif.lengh; k++) {
-                                            quantityModif[k].addEventListener("change", (event) => {
-                                                event.preventDefault();
-
-                                                //Sélection de l'élément à modif selon id et couleur
-                                                let qtModif = productBasket.quantity;
-                                                console.log(qtModif);
-                                                let quantityModifValue = quantityModif[k].valueAsNumber;
-                                                console.log(quantityModifValue);
-
-                                                let findResult = basket.find((el) => el.quantityModifValue !== qtModif);
-                                                basket[k].productBasket.quantity = findResult.productBasket.quantity;
-                                                localStorage.setItem("product", JSON.stringify(basket));
-
-                                                //Rafraichissement de la page
-                                                location.reload();
-
-                                            })
-                                        } */
                 }
                 modifyQuantity();
-            }
 
-            //Je supprime un produit --revoir
-            function deleteProduct() {
-                let deleteButton = document.getElementsByClassName("deleteItem");
+                //Je supprime un produit ------- revoir
+                function deleteProduct() {
+                    //Je cible mes boutons supprimer
+                    let deleteButton = document.getElementsByClassName("deleteItem");
+                    console.log(deleteButton);
 
-                for (let j = 0; j < deleteButton.length; j++) {
-                    deleteButton[j].addEventListener("click", (event) => {
-                        event.preventDefault();
+                    deleteButton.forEach((item) => {
+                            let deleteProduct = deleteButton.closest("article");
+                            //Sélection de l'élément à supprimer en fonction de son Id et de sa couleur
+                            let idDelete = item.dataset.id;
+                            console.log(idDelete);
+                            let colorDelete = item.dataset.colors;
+                            console.log(colorDelete);
 
-                        deleteButton.closest("article");
-                        //Sélection de l'élément à supprimer en fonction de son id et de sa couleur
-                        let idDelete = basket[j].product.id;
-                        console.log(idDelete);
-                        let colorDelete = basket[j].product.colors;
+                            product.addEventListener("click", (event) => {
+                                event.preventDefault();
+                                basket = basket.filter((element) => element.id !== idDelete || element.colors == !colorDelete);
+                                element.remove();
+                                //J'enregistre mon panier
+                                localStorage.setItem("element", JSON.stringify(basket));
+                            })
 
-                        basket = basket.filter(el => el.product.id !== idDelete || el.product.colors !== colorDelete);
-
-                        localStorage.setItem("product", JSON.stringify(basket));
-
-                        //Alerte produit supprimé et actualisé
+                        })
+                        /* //Alerte produit supprimé et actualisé
                         alert("Ce produit a bien été supprimé du panier");
-                        window.location();
-
-                    })
+                        window.location(); */
                 }
+                deleteProduct();
 
             }
-            deleteProduct();
 
         }
 
-        //-------------------------------Formulaire Utilisateur--------------------------------------
-        //Je récupère les balises d'input du formulaire
-        inputFirstName = document.querySelectorAll(".cart__order__form__question input")[0];
-        inputLastName = document.querySelectorAll(".cart__order__form__question input")[1];
-        inputAddress = document.querySelectorAll(".cart__order__form__question input")[2];
-        inputCity = document.querySelectorAll(".cart__order__form__question input")[3];
-        inputEmail = document.querySelectorAll(".cart__order__form__question input")[4];
+    }
 
-        //Je récupère les balises contenant les erreurs s'il y en a
-        errFirstName = document.querySelectorAll(".cart__order__form__question p")[0];
-        errLastName = document.querySelectorAll(".cart__order__form__question p")[1];
-        errAddress = document.querySelectorAll(".cart__order__form__question p")[2];
-        errCity = document.querySelectorAll(".cart__order__form__question p")[3];
-        errEmail = document.querySelectorAll(".cart__order__form__question p")[4];
+}
 
 
-        //----------------------------------FIRST NAME--------------------------------------
-        //Je récupère le prénom via un addEventListener
-        inputFirstName.addEventListener("input", function(e) {
-            validFirstName(e.target.value);
-            contact.firstName = e.target.value;
-        });
 
-        // Fonction qui vérifie à l'aide d'une regex que le champ prénom soit renseigné correctement
-        function validFirstName(firstName) {
-            if (firstName.lengh == 0) {
-                errFirstName.innerHTML = "Votre prénom n'est pas renseigné!";
-            } else if (/[0-9]/.test(firstName)) {
-                errFirstName.innerHTML = "Votre prénom ne peut pas contenir de chiffre";
-            } else {
-                errFirstName.innerHTML = "";
-                return /^[a-zA-Z\-]+$/.test(firstName);
+//-------------------------------Formulaire Utilisateur--------------------------------------
+//Je récupère les balises d'input du formulaire
+inputFirstName = document.querySelectorAll(".cart__order__form__question input")[0];
+inputLastName = document.querySelectorAll(".cart__order__form__question input")[1];
+inputAddress = document.querySelectorAll(".cart__order__form__question input")[2];
+inputCity = document.querySelectorAll(".cart__order__form__question input")[3];
+inputEmail = document.querySelectorAll(".cart__order__form__question input")[4];
 
-            }
-        }
-
-        //--------------------------------Last Name-----------------------------------------
-        //Je récupère le nom via un addEventListener
-        inputLastName.addEventListener("input", function(e) {
-            validLastName(e.target.value);
-            contact.lastName = e.target.value;
-        });
-
-        // Fonction qui vérifie à l'aide d'une regex que le champ nom soit renseigné correctement
-        function validLastName(lastName) {
-            if (lastName.lengh == 0) {
-                errLastName.innerHTML = "Votre nom n'est pas renseigné!";
-            } else if (/[0-9]/.test(lastName)) {
-                errLastName.innerHTML = "Votre nom ne peut pas contenir de chiffre";
-            } else {
-                errlastName.innerHTML = "";
-                return /^[a-zA-Z\-]+$/.test(lastName);
-
-            }
-        }
-
-        //--------------------------------ADDRESS-----------------------------------------
-        //Je récupère l'adresse via un addEventListener
-        inputAddress.addEventListener("input", function(e) {
-            validAddress(e.target.value);
-            contact.address = e.target.value;
-        });
-
-        // Fonction qui vérifie à l'aide d'une regex que le champ l'adresse soit renseigné correctement
-        function validAddress(address) {
-            if (address.lengh == 0) {
-                errAddress.innerHTML = "Votre adresse n'est pas renseignée!";
-            } else {
-                errAddress.innerHTML = "";
-                return /^[a-zA-Z\-]+$/.test(address);
-            }
-        }
-
-        //--------------------------------City-----------------------------------------
-        //Je récupère la ville via un addEventListener
-        inputCity.addEventListener("input", function(e) {
-            validCity(e.target.value);
-            contact.city = e.target.value;
-        });
-
-        // Fonction qui vérifie à l'aide d'une regex que le champ ville soit renseigné correctement
-        function validCity(city) {
-            if (city.lengh == 0) {
-                errCity.innerHTML = "Votre ville n'est pas renseignée!";
-            } else if (/[0-9]/.test(city)) {
-                errCity.innerHTML = "Votre ville ne peut pas contenir de chiffre";
-            } else {
-                errCity.innerHTML = "";
-                return /^[a-zA-Z\-]+$/.test(city);
-            }
-        }
-
-        //--------------------------------Email-----------------------------------------
-        //Je récupère l'email' via un addEventListener
-        inputEmail.addEventListener("input", function(e) {
-            validEmail(e.target.value);
-            contact.email = e.target.value;
-        });
-
-        // Fonction qui vérifie à l'aide d'une regex que le champ email soit renseigné correctement
-        function validEmail(email) {
-            let emailRegExp = new RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
-            if (email.lengh == 0) {
-                errEmail.innerHTML = "Votre email n'est pas renseignée!";
-            } else if (emailRegExp.test(email)) {
-                errEmail.innerHTML = "";
-            } else {
-                errEmail.innerHTML = "Votre email n'est pas valide!";
-            }
-        }
-
-        //Je récupère le bouton de soumission du formulaire
-        submitButton = document.querySelector("#order");
-        //AddEventListener qui fonctionne seulement si tous les champs sont correctement remplis
-        submitButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            let message = "";
-
-            //Fonction qui envoie les id de tous les produits dans un tableau products
-            function collectDatas() {
-                for (let productBasket of basket) {
-                    products.push(productBasket.id);
-                }
-            }
-
-            //Fonction qui vérifie si tous les champs sont valides
-            function verify() {
-                if (validForm) {
-                    if (basket) {
-                        message.innerHTML = "Votre commande est en cours";
-                        collectDatas();
-                        sendData();
-
-                    } else {
-                        message.innerHTML = "Votre panier est vide"
-                    }
-                }
-            }
-
-            //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
-            async function sendData() {
-                await fetch("https://api-kanap-eu.herokuapp.com/api/products/order", {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(contact, products)
-                });
-
-            }
+//Je récupère les balises contenant les erreurs s'il y en a
+errFirstName = document.querySelectorAll(".cart__order__form__question p")[0];
+errLastName = document.querySelectorAll(".cart__order__form__question p")[1];
+errAddress = document.querySelectorAll(".cart__order__form__question p")[2];
+errCity = document.querySelectorAll(".cart__order__form__question p")[3];
+errEmail = document.querySelectorAll(".cart__order__form__question p")[4];
 
 
-        })
+//----------------------------------FIRST NAME--------------------------------------
+//Je récupère le prénom via un addEventListener
+inputFirstName.addEventListener("input", function(e) {
+    validFirstName(e.target.value);
+    contact.firstName = e.target.value;
+});
+
+// Fonction qui vérifie à l'aide d'une regex que le champ prénom soit renseigné correctement
+function validFirstName(firstName) {
+    if (firstName.lengh == 0) {
+        errFirstName.innerHTML = "Votre prénom n'est pas renseigné!";
+    } else if (/[0-9]/.test(firstName)) {
+        errFirstName.innerHTML = "Votre prénom ne peut pas contenir de chiffre";
+    } else {
+        errFirstName.innerHTML = "";
+        return /^[a-zA-Z\-]+$/.test(firstName);
 
     }
 }
+
+//--------------------------------Last Name-----------------------------------------
+//Je récupère le nom via un addEventListener
+inputLastName.addEventListener("input", function(e) {
+    validLastName(e.target.value);
+    contact.lastName = e.target.value;
+});
+
+// Fonction qui vérifie à l'aide d'une regex que le champ nom soit renseigné correctement
+function validLastName(lastName) {
+    if (lastName.lengh == 0) {
+        errLastName.innerHTML = "Votre nom n'est pas renseigné!";
+    } else if (/[0-9]/.test(lastName)) {
+        errLastName.innerHTML = "Votre nom ne peut pas contenir de chiffre";
+    } else {
+        errlastName.innerHTML = "";
+        return /^[a-zA-Z\-]+$/.test(lastName);
+
+    }
+}
+
+//--------------------------------ADDRESS-----------------------------------------
+//Je récupère l'adresse via un addEventListener
+inputAddress.addEventListener("input", function(e) {
+    validAddress(e.target.value);
+    contact.address = e.target.value;
+});
+
+// Fonction qui vérifie à l'aide d'une regex que le champ l'adresse soit renseigné correctement
+function validAddress(address) {
+    if (address.lengh == 0) {
+        errAddress.innerHTML = "Votre adresse n'est pas renseignée!";
+    } else {
+        errAddress.innerHTML = "";
+        return /^[a-zA-Z\-]+$/.test(address);
+    }
+}
+
+//--------------------------------City-----------------------------------------
+//Je récupère la ville via un addEventListener
+inputCity.addEventListener("input", function(e) {
+    validCity(e.target.value);
+    contact.city = e.target.value;
+});
+
+// Fonction qui vérifie à l'aide d'une regex que le champ ville soit renseigné correctement
+function validCity(city) {
+    if (city.lengh == 0) {
+        errCity.innerHTML = "Votre ville n'est pas renseignée!";
+    } else if (/[0-9]/.test(city)) {
+        errCity.innerHTML = "Votre ville ne peut pas contenir de chiffre";
+    } else {
+        errCity.innerHTML = "";
+        return /^[a-zA-Z\-]+$/.test(city);
+    }
+}
+
+//--------------------------------Email-----------------------------------------
+//Je récupère l'email' via un addEventListener
+inputEmail.addEventListener("input", function(e) {
+    validEmail(e.target.value);
+    contact.email = e.target.value;
+});
+
+// Fonction qui vérifie à l'aide d'une regex que le champ email soit renseigné correctement
+function validEmail(email) {
+    let emailRegExp = new RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+    if (email.lengh == 0) {
+        errEmail.innerHTML = "Votre email n'est pas renseignée!";
+    } else if (emailRegExp.test(email)) {
+        errEmail.innerHTML = "";
+    } else {
+        errEmail.innerHTML = "Votre email n'est pas valide!";
+    }
+}
+
+//Je récupère le bouton de soumission du formulaire
+submitButton = document.querySelector("#order");
+//AddEventListener qui fonctionne seulement si tous les champs sont correctement remplis
+submitButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    let message = "";
+
+    //Fonction qui envoie les id de tous les produits dans un tableau products
+    function collectDatas() {
+        for (let productBasket of basket) {
+            products.push(productBasket.id);
+        }
+    }
+
+    //Fonction qui vérifie si tous les champs sont valides
+    function verify() {
+        if (validForm) {
+            if (basket) {
+                message.innerHTML = "Votre commande est en cours";
+                collectDatas();
+                sendData();
+
+            } else {
+                message.innerHTML = "Votre panier est vide"
+            }
+        }
+    }
+
+    //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
+    async function sendData() {
+        await fetch("https://api-kanap-eu.herokuapp.com/api/products/order", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contact, products)
+        });
+
+    }
+
+})
 
 basketDisplay()
