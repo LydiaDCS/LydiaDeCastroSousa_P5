@@ -93,7 +93,6 @@ let basketDisplay = () => {
                       </article>`;
 
                 //Fonction qui calcule le total des quantités et le total des prix
-
                 function getTotals() {
                     //Je crée mes variables en ciblant le texte HTML
                     let quantityProduct = document.getElementsByClassName("itemQuantity");
@@ -124,72 +123,78 @@ let basketDisplay = () => {
                     productTotalPrice.innerText = totalPrice;
                 }
                 getTotals();
+
+                //Modification d'une quantité d'un produit ------------ Revoir
+                function modifyQuantity() {
+                    //Je cible la quantité à modifier
+                    let quantityModif = document.querySelectorAll(".itemQuantity");
+
+                    //Je remonte l'article
+                    quantityModif.forEach((item) => {
+                        const itemCloset = item.closest("article");
+                        //Je récupère l'id du parent article
+                        const id = itemCloset.dataset.id;
+                        console.log(id);
+
+                        //Je récupère la couleur du parent article
+                        const color = itemCloset.dataset.color;
+                        console.log(color);
+
+                        //J'écoute item lorsque celui-ci change
+                        item.addEventListener("change", () => {
+                            const resultFind = item.find((item) => itemCloset.dataset.id == item.id && itemCloset.dataset.color == item.colors);
+                            if (resultFind) {
+                                resultFind.quantityModif = quantityProduct[i].valueAsNumber;
+                            }
+                            localStorage.setItem("product", JSON.stringify(basket));
+
+
+                        })
+                    })
+                }
+                modifyQuantity();
+
+                //Fonction qui supprime un produit 
+                function deleteProduct() {
+                    //Je cible mes boutons supprimer
+                    let deleteButton = document.querySelectorAll(".deleteItem");
+
+                    // boucle sur les boutons supprimer
+                    deleteButton.forEach((item) => {
+
+                        // écoute du clic le bouton supprimer ciblé
+                        item.addEventListener("click", (event) => {
+
+                            // on attrape la div article englobant le bouclé supprimer cliqué
+                            let cart = item.closest("article");
+
+                            //  on récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
+                            let idDelete = cart.dataset.id;
+                            let colorDelete = cart.dataset.color;
+
+                            // on retire l'élément cliqué du tableau basket
+                            basket = basket.filter((element) => element.id !== idDelete || element.colors !== colorDelete);
+
+                            //on push basket dans le storage
+                            localStorage.setItem("product", JSON.stringify(basket));
+
+                            // on retive la div cart du dom
+                            cart.remove();
+
+                            //Appeler la fonction qui calcule le total des quantités et le total des prix
+                            getTotals();
+
+                        });
+                    });
+                }
+
+                deleteProduct();
+
             }
 
+
         }
 
-        //Modification d'une quantité d'un produit ------------ Revoir
-        function modifyQuantity() {
-            //Je cible la quantité à modifier
-            let quantityModif = document.querySelectorAll(".itemQuantity");
-
-            //Je remonte l'article
-            quantityModif.forEach((item) => {
-                const itemCloset = item.closest("article");
-                //Je récupère l'id du parent article
-                const id = itemCloset.dataset.id;
-                console.log(id);
-
-                //Je récupère la couleur du parent article
-                const color = itemCloset.dataset.color;
-                console.log(color);
-
-                //J'écoute item lorsque celui-ci change
-                item.addEventListener("change", () => {
-                    const resultFind = item.find((item) => itemCloset.dataset.id == item.id && itemCloset.dataset.color == item.colors);
-                    if (resultFind) {
-                        resultFind.quantityModif = quantityProduct[i].valueAsNumber;
-                    }
-                    localStorage.setItem("product", JSON.stringify(basket));
-
-
-                })
-            })
-        }
-        modifyQuantity();
-
-        //Fonction qui supprime un produit  ------- revoir
-        function deleteProduct() {
-            //Je cible mes boutons supprimer
-            let deleteButton = document.querySelectorAll(".deleteItem");
-
-            // boucle sur les boutons supprimer
-            deleteButton.forEach((item) => {
-
-                // écoute du clic le bouton supprimer ciblé
-                item.addEventListener("click", (event) => {
-
-                    // on attrape la div article englobant le bouclé supprimer cliqué
-                    let cart = item.closest("article");
-
-                    //  on récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
-                    let idDelete = cart.dataset.id;
-                    let colorDelete = cart.dataset.color;
-
-                    // on retire l'élément cliqué du tableau basket
-                    basket = basket.filter((element) => element.id !== idDelete || element.colors !== colorDelete);
-
-                    //on push basket dans le storage
-                    localStorage.setItem("product", JSON.stringify(basket));
-
-                    // on retive la div cart du dom
-                    cart.remove();
-
-                });
-            });
-        }
-
-        deleteProduct();
 
     }
 
