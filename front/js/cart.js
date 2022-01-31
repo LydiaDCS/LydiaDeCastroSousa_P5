@@ -127,29 +127,35 @@ let basketDisplay = () => {
                 //Modification d'une quantité d'un produit ------------ Revoir
                 function modifyQuantity() {
                     //Je cible la quantité à modifier
-                    let quantityModif = document.querySelectorAll(".itemQuantity");
+                    let quantityProduct = document.querySelectorAll(".itemQuantity");
 
-                    //Boucle sur les quantités à modifier
-                    quantityModif.forEach((item) => {
+                    quantityProduct.forEach((item) => {
 
                         //J'écoute item lorsque celui-ci change
                         item.addEventListener("change", () => {
 
-                            //
-                            const itemCloset = item.closest("article");
-                            //Je récupère l'id du parent article
-                            const id = itemCloset.dataset.id;
-                            console.log(id);
+                            // on attrape la div article englobant le bouton pour modifier la quantité
+                            let cart = item.closest("article");
+                            console.log(cart);
 
-                            //Je récupère la couleur du parent article
-                            const color = itemCloset.dataset.color;
-                            console.log(color);
-                            const resultFind = item.find((item) => itemCloset.dataset.id == item.id && itemCloset.dataset.color == item.colors);
-                            if (resultFind) {
-                                resultFind.quantityModif = quantityProduct[i].valueAsNumber;
+                            //on récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
+                            let idDelete = cart.dataset.id;
+                            let colorDelete = cart.dataset.color;
+
+                            //Je trouve mon produit le panier et j'augmente sa quantité si je le trouve
+                            const find = basket.find((item) => item.id == idDelete && item.colors == colorDelete);
+                            if (find) {
+                                let totalQtt = 0;
+                                find.quantityProduct = totalQtt;
                             }
+                            //On enregistre le nouveau panier
                             localStorage.setItem("product", JSON.stringify(basket));
 
+                            //Appeler la fonction qui calcule le total des quantités et le total des prix
+                            getTotals();
+
+                            //Alerte pour avertir que le produit va être ajouté au panier et rechargement de la page 
+                            alert("Ce produit va être ajouté à votre panier");
 
                         })
                     })
@@ -180,15 +186,15 @@ let basketDisplay = () => {
                             //on push basket dans le storage
                             localStorage.setItem("product", JSON.stringify(basket));
 
-                            // on retive la div cart du dom
+                            // on retire la div cart du dom
                             cart.remove();
 
                             //Appeler la fonction qui calcule le total des quantités et le total des prix
                             getTotals();
 
-                            //Alerte pour avertir que le produit va être supprimé du panier
+                            //Alerte pour avertir que le produit va être supprimé du panier et rechargement de la page 
                             alert("Ce produit va être supprimé de votre panier");
-                            window.location();
+                            location.reload();
                         });
                     });
                 }
@@ -331,15 +337,13 @@ submitButton.addEventListener("click", (e) => {
 
     //Fonction qui vérifie si tous les champs sont valides
     function verify() {
-        if (validForm) {
-            if (basket) {
-                message.innerHTML = "Votre commande est en cours";
-                collectDatas();
-                sendData();
-
-            } else {
-                message.innerHTML = "Votre panier est vide"
-            }
+        if (validFirstName && validLastName && validCity && validAddress && validEmail) {
+            message.innerHTML = "Votre commande est en cours";
+            collectDatas();
+            sendData();
+            window.location.assign("confirmation.html");
+        } else {
+            message.innerHTML = "Merci de remplir correctement le formulaire pour passer votre commande"
         }
     }
 
