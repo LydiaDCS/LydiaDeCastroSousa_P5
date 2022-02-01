@@ -232,7 +232,7 @@ inputFirstName.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ prénom soit renseigné correctement
 function validFirstName(firstName) {
-    let regexName = /^[a-zA-Z\-s]{2,21}$/g;
+    let regexName = /^[a-zA-Z\-\s]{2,21}$/g;
     let valid = false;
     let testName = regexName.test(firstName);
     if (testName) {
@@ -339,13 +339,14 @@ submitButton = document.getElementById("order");
 submitButton.addEventListener("click", (event) => {
     event.preventDefault();
 
+    //Je crée ma variable message pour écrire un message
+    let message = "";
+
     //Je crée un tableau pour récupérer les id des produits
     let arrayId = [];
 
     //je vérifie si tous les champs sont valides
-    if (validFirstName(firstName) == false || validLastName(lastName) == false || validCity(city) == false || validAddress(address) == false || validEmail(email) == false) {
-        //Je crée ma variable message pour écrire un message
-        let message = document.createElement("h2");
+    if (validFirstName(contact.firstName) == false || validLastName(contact.lastName) == false || validCity(contact.city) == false || validAddress(contact.address) == false || validEmail(contact.email) == false) {
         message.innerHTML = "Merci de remplir correctement le formulaire pour passer votre commande"
     } else {
         message.innerHTML = "Votre commande est en cours";
