@@ -1,15 +1,6 @@
 //Je récupère mon panier du local storage
 let basket = JSON.parse(localStorage.getItem("product"));
 
-//Je récupère les informations saisies par l'utilisateur
-let contact = {
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    email: "",
-};
-
 //J'affiche mon panier
 let basketDisplay = () => {
         // si mon panier est vide alors la quantité et le prix sont 0 et message "Aucun article dans le panier"
@@ -207,7 +198,17 @@ let basketDisplay = () => {
         }
     }
     //-------------------------------Formulaire Utilisateur--------------------------------------
-    //Je récupère les balises d'input du formulaire 
+
+//Je récupère les informations saisies par l'utilisateur
+let contact = {
+    firstName: "",
+    lastName: "",
+    address: "",
+    city: "",
+    email: "",
+};
+
+//Je récupère les balises d'input du formulaire 
 let inputFirstName = document.getElementById("firstName");
 let inputLastName = document.getElementById("lastName");
 let inputAddress = document.getElementById("address");
@@ -231,7 +232,7 @@ inputFirstName.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ prénom soit renseigné correctement
 function validFirstName(firstName) {
-    let regexName = new RegExp("^[a-zA-Z]{2,21}$", "g");
+    let regexName = /^[a-zA-Z\-s]{2,21}$/g;
     let valid = false;
     let testName = regexName.test(firstName);
     if (testName) {
@@ -239,6 +240,7 @@ function validFirstName(firstName) {
         valid = true;
     } else {
         errFirstName.innerText = "Veuillez entrer un prénom valide";
+        valid = false;
     }
     return valid;
 }
@@ -252,7 +254,7 @@ inputLastName.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ nom soit renseigné correctement
 function validLastName(lastName) {
-    let regexLastName = new RegExp("^[a-zA-Z\s]{2,25}$");
+    let regexLastName = /^[a-zA-Z\s\-]{2,25}$/g;
     let valid = false;
     let testLastName = regexLastName.test(lastName);
     if (testLastName) {
@@ -260,6 +262,7 @@ function validLastName(lastName) {
         valid = true;
     } else {
         errLastName.innerText = "Veuillez entrer un nom valide";
+        valid = false;
     }
     return valid;
 }
@@ -273,7 +276,7 @@ inputAddress.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ l'adresse soit renseigné correctement
 function validAddress(address) {
-    let regexAddress = new RegExp("^[0-9][a-zA-Z]{2,21}$", "g");
+    let regexAddress = /^[0-9]{0,10}[a-zA-Z\s\-]{2,30}$/g;
     let valid = false;
     let testAddress = regexAddress.test(address);
     if (testAddress) {
@@ -281,6 +284,7 @@ function validAddress(address) {
         valid = true;
     } else {
         errAddress.innerText = "Veuillez entrer une adresse valide";
+        valid = false;
     }
     return valid;
 }
@@ -293,7 +297,7 @@ inputCity.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ ville soit renseigné correctement
 function validCity(city) {
-    let regexCity = new RegExp("^[a-zA-Z]{2,21}$", "g");
+    let regexCity = /^[a-zA-Z\-\s]{2,30}$/g;
     let valid = false;
     let testCity = regexCity.test(city);
     if (testCity) {
@@ -301,6 +305,7 @@ function validCity(city) {
         valid = true;
     } else {
         errCity.innerText = "Veuillez entrer une ville valide";
+        valid = false;
     }
     return valid;
 }
@@ -314,7 +319,7 @@ inputEmail.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ email soit renseigné correctement
 function validEmail(email) {
-    let regexEmail = new RegExp("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", "g");
+    let regexEmail = /^[a-zA-Z0-9.!^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+$/g;
     let valid = false;
     let testEmail = regexEmail.test(email);
     if (testEmail) {
@@ -322,16 +327,33 @@ function validEmail(email) {
         valid = true;
     } else {
         errEmail.innerText = "Veuillez entrer une adresse e-mail valide";
+        valid = false;
     }
     return valid;
 }
 
 //Je récupère le bouton de soumission du formulaire
-submitButton = document.querySelector("#order");
+submitButton = document.getElementById("order");
+
 //AddEventListener qui fonctionne seulement si tous les champs sont correctement remplis
-submitButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    let message = "";
+submitButton.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    //Je crée un tableau pour récupérer les id des produits
+    let arrayId = [];
+
+    //je vérifie si tous les champs sont valides
+    if (validFirstName(firstName) == false || validLastName(lastName) == false || validCity(city) == false || validAddress(address) == false || validEmail(email) == false) {
+        //Je crée ma variable message pour écrire un message
+        let message = document.createElement("h2");
+        message.innerHTML = "Merci de remplir correctement le formulaire pour passer votre commande"
+    } else {
+        message.innerHTML = "Votre commande est en cours";
+        collectDatas();
+        sendData();
+        window.location.assign("confirmation.html");
+    }
+
 
     //Fonction qui envoie les id de tous les produits dans un tableau products
     function collectDatas() {
@@ -339,23 +361,6 @@ submitButton.addEventListener("click", (e) => {
             arrayId.push(product.id);
         }
     }
-
-    //Fonction qui vérifie si tous les champs sont valides
-    function verify() {
-        if (validFirstName && validLastName && validCity && validAddress && validEmail) {
-            message.innerHTML = "Votre commande est en cours";
-            collectDatas();
-            sendData();
-            window.location.assign("confirmation.html");
-        } else {
-            message.innerHTML = "Merci de remplir correctement le formulaire pour passer votre commande"
-        }
-    }
-
-
-    //Je crée un tableau pour récupérer les id des produits
-    let arrayId = [];
-
     //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
     async function sendData() {
         await fetch("https://api-kanap-eu.herokuapp.com/api/products/order", {
@@ -368,6 +373,7 @@ submitButton.addEventListener("click", (e) => {
         });
 
     }
+    //J'envoie l'objet contact dans le local storage
     localStorage.setItem("contact", JSON.stringify(contact));
     localStorage.setItem("arrayId", JSON.stringify(arrayId));
     for (let product of basket) {
