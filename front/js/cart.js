@@ -199,7 +199,7 @@ let basketDisplay = () => {
     }
     //-------------------------------Formulaire Utilisateur--------------------------------------
 
-//Je récupère les informations saisies par l'utilisateur 
+//Je déclare mon objet contact pour récupérer les informations saisies par l'utilisateur 
 let contact = {
     firstName: "",
     lastName: "",
@@ -208,7 +208,7 @@ let contact = {
     email: "",
 };
 
-//Je récupère l'id des produits dans le panier
+//Je crée un tableau pour récupérer l'id des produits dans le panier
 let arrayId = [];
 
 //Je récupère les balises d'input du formulaire 
@@ -225,7 +225,6 @@ let errAddress = document.getElementById("addressErrorMsg");
 let errCity = document.getElementById("cityErrorMsg");
 let errEmail = document.getElementById("emailErrorMsg");
 
-
 //----------------------------------FIRST NAME---------------------------------------------------
 //Je récupère le prénom via un addEventListener
 inputFirstName.addEventListener("input", function(e) {
@@ -235,9 +234,9 @@ inputFirstName.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ prénom soit renseigné correctement
 function validFirstName(firstName) {
-    let regexName = /^[a-zA-Z\s\-]{2,21}$/g;
+    let regexFirstName = /^[a-zA-Z\s\-]{2,21}$/g;
     let valid = false;
-    let testName = regexName.test(firstName);
+    let testName = regexFirstName.test(firstName);
     if (testName) {
         errFirstName.innerText = "";
         valid = true;
@@ -335,8 +334,8 @@ function validEmail(email) {
     return valid;
 }
 
-//Je récupère le bouton de soumission du formulaire
-submitButton = document.getElementById("order");
+//Je cible le bouton de soumission du formulaire
+let submitButton = document.getElementById("order");
 
 //AddEventListener qui fonctionne seulement si tous les champs sont correctement remplis
 submitButton.addEventListener("click", (event) => {
@@ -358,7 +357,7 @@ submitButton.addEventListener("click", (event) => {
             window.location.assign("confirmation.html");
         } */
 
-    /*  //Je crée une boucle sur tous les produits du panier pour récupérer les id des produits
+    //Je crée une boucle sur tous les produits du panier pour récupérer les id des produits
     for (let i = 0; i < basket.lengh; i++) {
         arrayId.push(basket[i].id);
     }
@@ -369,11 +368,11 @@ submitButton.addEventListener("click", (event) => {
         arrayId: arrayId,
     }
     console.log(order);
- */
+
 
     //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
     //Option nécessaire à l'Api pour utiliser POST
-    /* const apiId = {
+    const apiId = {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -392,7 +391,7 @@ submitButton.addEventListener("click", (event) => {
         })
         .catch((err) => {
             console.log(err);
-        }); */
+        });
 
 })
 
