@@ -207,6 +207,8 @@ let contact = {
     city: "",
     email: "",
 };
+//Je crée un tableau pour récupérer l'id des produits dans le panier
+let products = [];
 
 //Je récupère les balises d'input du formulaire 
 let inputFirstName = document.getElementById("firstName");
@@ -344,20 +346,16 @@ submitButton.addEventListener("click", (event) => {
     } else {
         //J'enregistre dans le local storage les informations de l'utilisateur
         localStorage.setItem("contact", JSON.stringify(contact));
-        /*  //Je charge la page confirmation
-         window.location.assign("confirmation.html"); */
-        //Je crée un tableau pour récupérer l'id des produits dans le panier
-        let arrayId = [];
 
         //Je crée une boucle sur tous les produits du panier pour récupérer les id des produits
-        for (let i = 0; i < basket.lengh; i++) {
-            arrayId.push(basket[i].id);
+        for (let j = 0; j < basket.length; j++) {
+            products.push(basket[j].id);
         }
-        console.log(arrayId);
+        console.log(products);
 
         const order = {
             contact: contact,
-            products: arrayId,
+            products: products,
         }
         console.log(order);
 
@@ -384,11 +382,9 @@ submitButton.addEventListener("click", (event) => {
                 console.log(data);
                 let orderId = data.orderId;
                 window.location.assign("confirmation.html?id=" + orderId);
+                console.log(orderId);
             })
-
     }
-
-
 })
 
 basketDisplay()
