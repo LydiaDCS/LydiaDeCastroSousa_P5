@@ -379,7 +379,6 @@ submitButton.addEventListener("click", (event) => {
                 console.log(data);
                 let orderId = data.orderId;
                 console.log(orderId);
-                localStorage.setItem("orderId", JSON.stringify(orderId));
                 window.location.assign("confirmation.html?id=" + orderId);
             })
     }
