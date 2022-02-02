@@ -83,15 +83,16 @@ let basketDisplay = () => {
                         quantityProduct = document.querySelectorAll(".itemQuantity");
 
                         quantityProduct.forEach((item) => {
-                            // on attrape la div article englobant le bouton pour modifier la quantité
+                            //J'attrape la div article englobant le bouton pour modifier la quantité
                             let cart = item.closest("article");
                             console.log(cart);
-                            //on récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
+                            //Je récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
                             let idDelete = cart.dataset.id;
                             let colorDelete = cart.dataset.color;
 
-                            //On déclare la variable qui va recevoir la nouvelle quantité
+                            //Je déclare la variable qui va recevoir la nouvelle quantité
                             let newQuantity = "";
+
                             //J'écoute item lorsque celui-ci change
                             item.addEventListener("change", (event) => {
                                 event.preventDefault();
@@ -111,7 +112,7 @@ let basketDisplay = () => {
                                 //Alerte pour avertir que le produit va être ajouté au panier 
                                 alert("Votre quantité va être mise à jour");
 
-                                //On enregistre le nouveau panier
+                                //J'enregistre le nouveau panier
                                 localStorage.setItem("product", JSON.stringify(basket));
                             })
                         })
@@ -152,34 +153,34 @@ let basketDisplay = () => {
                     getTotals();
 
 
-                    //Fonction qui supprime un produit 
+                    //Fonction qui permet de supprimer un produit 
                     function deleteProduct() {
                         //Je cible mes boutons supprimer
                         let deleteButton = document.querySelectorAll(".deleteItem");
 
-                        // boucle sur les boutons supprimer
+                        //Je crée une boucle sur les boutons supprimer
                         deleteButton.forEach((item) => {
 
-                            // écoute du clic le bouton supprimer ciblé
+                            //J'écoute item au clic sur le bouton supprimer ciblé
                             item.addEventListener("click", (event) => {
 
-                                // on attrape la div article englobant le bouton supprimer 
+                                //J'attrape la div article englobant le bouton supprimer 
                                 let cart = item.closest("article");
 
-                                //  on récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
+                                //Je récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
                                 let idDelete = cart.dataset.id;
                                 let colorDelete = cart.dataset.color;
 
-                                // on retire l'élément cliqué du tableau basket
+                                //Je retire l'élément cliqué du tableau basket
                                 basket = basket.filter((element) => element.id !== idDelete || element.colors !== colorDelete);
 
-                                //on push basket dans le storage
+                                //Je push basket dans le storage
                                 localStorage.setItem("product", JSON.stringify(basket));
 
-                                // on retire la div cart du dom
+                                //Je retire la div cart du dom
                                 cart.remove();
 
-                                //Appeler la fonction qui calcule le total des quantités et le total des prix
+                                //J'appelle la fonction qui calcule le total des quantités et le total des prix
                                 getTotals();
 
                                 //Alerte pour avertir que le produit va être supprimé du panier et rechargement de la page 
