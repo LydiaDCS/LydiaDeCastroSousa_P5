@@ -1,7 +1,7 @@
-//Je récupère mon panier du local storage
+/* Je récupère mon panier du local storage */
 let basket = JSON.parse(localStorage.getItem("product"));
 
-//J'affiche mon panier
+/* J'affiche mon panier */
 let basketDisplay = () => {
         // si mon panier est vide alors la quantité et le prix sont 0 et message "Aucun article dans le panier"
         if (basket == null || basket == 0) {
@@ -17,7 +17,7 @@ let basketDisplay = () => {
                 console.log(product);
                 console.log(product.id);
 
-                //Fonction qui récupère l'Id du produit depuis l'API
+                //Fonction qui récupère les produits depuis l'API grâce à leur Id
                 function fetchApiProduct() {
                     fetch(`http://localhost:3000/api/products/` + product.id)
                         .then((res) => {
@@ -51,10 +51,7 @@ let basketDisplay = () => {
                     }
                     console.log(productBasket);
 
-                    /*  //J'affiche le prix selon la quantité enregistrée dans le local storage
-                     productBasket.price = productBasket.price * productBasket.quantity;
-                     console.log(productBasket.price); */
-
+                    //J'insère les informations de chaque produit dans la page panier
                     let cartItem = document.getElementById("cart__items");
 
                     cartItem.innerHTML +=
@@ -80,7 +77,7 @@ let basketDisplay = () => {
                         </div>
                       </article>`;
 
-                    //Modification d'une quantité d'un produit ------------ Revoir
+                    //Fonction qui permet de modifier la quantité d'un produit 
                     function modifyQuantity() {
                         //Je cible la quantité à modifier
                         quantityProduct = document.querySelectorAll(".itemQuantity");
@@ -93,6 +90,7 @@ let basketDisplay = () => {
                             let idDelete = cart.dataset.id;
                             let colorDelete = cart.dataset.color;
 
+                            //On déclare la variable qui va recevoir la nouvelle quantité
                             let newQuantity = "";
                             //J'écoute item lorsque celui-ci change
                             item.addEventListener("change", (event) => {
@@ -101,17 +99,16 @@ let basketDisplay = () => {
                                 newQuantity = Number(item.value);
                                 console.log(newQuantity);
 
-                                console.log(basket);
+                                //Je crée une boucle pour trouver le produit qui a été ciblé grâce à son id et sa couleur
                                 for (let i = 0; i < basket.length; i++) {
                                     if (basket[i].id == idDelete && basket[i].colors == colorDelete) {
                                         basket[i].quantity = newQuantity;
                                     }
                                 }
-
-                                //Appeler la fonction qui calcule le total des quantités et le total des prix
+                                //J'appelle la fonction qui calcule le total des quantités et le total des prix
                                 getTotals();
 
-                                //Alerte pour avertir que le produit va être ajouté au panier et rechargement de la page 
+                                //Alerte pour avertir que le produit va être ajouté au panier 
                                 alert("Votre quantité va être mise à jour");
 
                                 //On enregistre le nouveau panier
@@ -348,17 +345,17 @@ submitButton.addEventListener("click", (event) => {
         localStorage.setItem("contact", JSON.stringify(contact));
 
         //Je crée une boucle sur tous les produits du panier pour récupérer les id des produits
-        for (let j = 0; j < basket.length; j++) {
-            products.push(basket[j].id);
+        for (let i = 0; i < basket.length; i++) {
+            products.push(basket[i].id);
         }
         console.log(products);
 
+        //Je crée mon objet pour envoyer mes informations utilisateurs et mes id à l'API
         const order = {
             contact: contact,
             products: products,
         }
         console.log(order);
-
 
         //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
         //Option nécessaire à l'Api pour utiliser POST
@@ -381,8 +378,9 @@ submitButton.addEventListener("click", (event) => {
             .then((data) => {
                 console.log(data);
                 let orderId = data.orderId;
-                window.location.assign("confirmation.html?id=" + orderId);
                 console.log(orderId);
+                localStorage.setItem("orderId", JSON.stringify(orderId));
+                window.location.assign("confirmation.html?id=" + orderId);
             })
     }
 })

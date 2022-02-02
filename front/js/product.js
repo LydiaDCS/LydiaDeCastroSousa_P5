@@ -1,9 +1,9 @@
-/*Je récupère l'id produit depuis l'Url*/
+/*Je récupère l'id produit depuis l'Url avec URLSearchParams*/
 let params = (new URL(document.location)).searchParams;
 let productId = params.get("id");
 console.log(productId);
 
-/*Je déclare mes variables et fait le lien avec ma page html*/
+/*Je déclare mes variables en ciblant les informations pour chaque produit*/
 let title = document.getElementById("title");
 let imageUrl = document.querySelector(".item__img");
 let prix = document.getElementById("price");
@@ -12,7 +12,7 @@ let selectColor = document.querySelector("colors");
 let quantity = document.getElementById("quantity");
 
 
-/*Je récupére mon produit depuis mon API*/
+/*Je récupére mon produit depuis l'API grâce à son Id*/
 function fetchApiProduct() {
     fetch(`http://localhost:3000/api/products/${productId}`)
         .then((res) => {
@@ -55,13 +55,13 @@ function displayProduct(product) {
         selectColor.innerHTML += `<option value="${product.colors[i]}">${product.colors[i]}</option>`;
     }
 
-    /*Je déclare ma variable addBasket et fait le lien avec page HTML*/
+    /*Je cible mon bouton "Ajouter au Panier" */
     let addBasket = document.querySelector("#addToCart");
 
-    //J'écoute le bouton et envoie les données saisies par l'utilisateur
+    /* J'écoute le bouton et envoie les données saisies par l'utilisateur dans le panier et local Storage */
     addBasket.addEventListener("click", () => {
 
-        //Je récupère les données saisies par l'utilisateur dont mon Id, la couleur et la quantité
+        //Je déclare un objet selectProduct pour récupère les données saisies par l'utilisateur dont mon Id, la couleur et la quantité et les envoyer au panier
         let selectProduct = {
             id: productId,
             colors: selectColor.value,
@@ -77,7 +77,7 @@ function displayProduct(product) {
                 alert('Veuillez indiquer une quantité correcte')
             } else {
                 addToLocalStorage(selectProduct);
-                //Chargement de la page cart
+                //Chargement de la page cart - Page Panier
                 window.location.assign("cart.html");
             }
         }
@@ -93,15 +93,15 @@ function displayProduct(product) {
                 //Et je pousse un nouveau produit dans le local storage et l'enregistre
                 basket.push(product);
                 localStorage.setItem("product", JSON.stringify(basket));
-                console.log(basket);
             } //Sinon si le panier n'est pas vide, je vérifie si le produit enregistré possède le même id et la même couleur que le produit sélectionné
             else if (basket) {
                 let getProduct = basket.find(
                     (p) =>
                     selectProduct.id == p.id && selectProduct.colors == p.colors);
-                //Si je trouve le même produit dans le panier alors j'augmente sa quantité selon la quantité choisie par l'utilisateur et j'enregistre le nouveau panier
+                //Si je trouve le même produit dans le panier alors j'augmente sa quantité selon la quantité choisie par l'utilisateur
                 if (getProduct) {
                     getProduct.quantity = Number(selectProduct.quantity) + Number(getProduct.quantity);
+                    //J'enregistre le nouveau panier
                     localStorage.setItem("product", JSON.stringify(basket));
                 } //Sinon la quantité du produit reste inchangé et j'ajoute un nouveau produit dans le local storage et l'enregistre 
                 else {
