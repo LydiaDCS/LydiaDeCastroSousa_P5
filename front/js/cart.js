@@ -208,9 +208,6 @@ let contact = {
     email: "",
 };
 
-//Je crée un tableau pour récupérer l'id des produits dans le panier
-let arrayId = [];
-
 //Je récupère les balises d'input du formulaire 
 let inputFirstName = document.getElementById("firstName");
 let inputLastName = document.getElementById("lastName");
@@ -341,57 +338,56 @@ let submitButton = document.getElementById("order");
 submitButton.addEventListener("click", (event) => {
     event.preventDefault();
 
-    //J'enregistre dans le local storage les informations de l'utilisateur
-    localStorage.setItem("contact", JSON.stringify(contact));
-    /* 
-        //Je crée ma variable message pour écrire un message
-        let message = "";
+    //Je vérifie si tous les champs sont valides
+    if (validFirstName(contact.firstName) == false || validLastName(contact.lastName) == false || validCity(contact.city) == false || validAddress(contact.address) == false || validEmail(contact.email) == false) {
+        return errAddress || errCity || errEmail || errFirstName || errLastName;
+    } else {
+        //J'enregistre dans le local storage les informations de l'utilisateur
+        localStorage.setItem("contact", JSON.stringify(contact));
+        /*  //Je charge la page confirmation
+         window.location.assign("confirmation.html"); */
+        //Je crée un tableau pour récupérer l'id des produits dans le panier
+        let arrayId = [];
 
-        /* //je vérifie si tous les champs sont valides
-        if (validFirstName(contact.firstName) == false || validLastName(contact.lastName) == false || validCity(contact.city) == false || validAddress(contact.address) == false || validEmail(contact.email) == false) {
-            message.innerHTML = "Merci de remplir correctement le formulaire pour passer votre commande"
-        } else {
-            message.innerHTML = "Votre commande est en cours";
+        //Je crée une boucle sur tous les produits du panier pour récupérer les id des produits
+        for (let i = 0; i < basket.lengh; i++) {
+            arrayId.push(basket[i].id);
+        }
+        console.log(arrayId);
 
-            sendData();
-            window.location.assign("confirmation.html");
-        } */
+        const order = {
+            contact: contact,
+            products: arrayId,
+        }
+        console.log(order);
 
-    //Je crée une boucle sur tous les produits du panier pour récupérer les id des produits
-    for (let i = 0; i < basket.lengh; i++) {
-        arrayId.push(basket[i].id);
+
+        //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
+        //Option nécessaire à l'Api pour utiliser POST
+        const apiId = {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(order)
+        }
+
+        //Envoi des données au serveur
+        fetch("https://api-kanap-eu.herokuapp.com/api/products/order", apiId)
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+            .then((data) => {
+                console.log(data);
+                let orderId = data.orderId;
+                window.location.assign("confirmation.html?id=" + orderId);
+            })
+
     }
-    console.log(arrayId);
 
-    const order = {
-        contact: contact,
-        arrayId: arrayId,
-    }
-    console.log(order);
-
-
-    //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
-    //Option nécessaire à l'Api pour utiliser POST
-    const apiId = {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(order)
-    }
-
-    //Envoi des données au serveur
-    fetch("https://api-kanap-eu.herokuapp.com/api/products/order", apiId)
-        .then((réponse) => réponse.json())
-        .then((data) => {
-            console.log(data);
-            let orderId = document.getElementById("orderId");
-            window.location.assign("confirmation.html");
-        })
-        .catch((err) => {
-            console.log(err);
-        });
 
 })
 
