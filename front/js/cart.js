@@ -183,7 +183,7 @@ let basketDisplay = () => {
                                 //J'appelle la fonction qui calcule le total des quantités et le total des prix
                                 getTotals();
 
-                                //Alerte pour avertir que le produit va être supprimé du panier et rechargement de la page 
+                                //Alerte pour avertir que le produit va être supprimé du panier
                                 alert("Ce produit va être supprimé de votre panier");
                                 location.reload();
                             });
@@ -208,14 +208,14 @@ let contact = {
 //Je crée un tableau pour récupérer l'id des produits dans le panier
 let products = [];
 
-//Je récupère les balises d'input du formulaire 
+//Je cible les balises d'input du formulaire 
 let inputFirstName = document.getElementById("firstName");
 let inputLastName = document.getElementById("lastName");
 let inputAddress = document.getElementById("address");
 let inputCity = document.getElementById("city");
 let inputEmail = document.getElementById("email");
 
-//Je récupère les balises contenant les erreurs s'il y en a
+//Je cible les balises contenant les erreurs s'il y en a
 let errFirstName = document.getElementById("firstNameErrorMsg");
 let errLastName = document.getElementById("lastNameErrorMsg");
 let errAddress = document.getElementById("addressErrorMsg");
@@ -223,7 +223,7 @@ let errCity = document.getElementById("cityErrorMsg");
 let errEmail = document.getElementById("emailErrorMsg");
 
 //----------------------------------FIRST NAME---------------------------------------------------
-//Je récupère le prénom via un addEventListener
+//J'écoute la variable inputFirstName avec addEventListener
 inputFirstName.addEventListener("input", function(e) {
     validFirstName(e.target.value);
     contact.firstName = e.target.value;
@@ -245,7 +245,7 @@ function validFirstName(firstName) {
 }
 
 //--------------------------------Last Name------------------------------------------------------
-//Je récupère le nom via un addEventListener
+//J'écoute la variable inputLastName avec addEventListener
 inputLastName.addEventListener("input", function(e) {
     validLastName(e.target.value);
     contact.lastName = e.target.value;
@@ -267,7 +267,7 @@ function validLastName(lastName) {
 }
 
 //--------------------------------ADDRESS-------------------------------------------------------
-//Je récupère l'adresse via un addEventListener
+//J'écoute la variable inputAddress avec addEventListener
 inputAddress.addEventListener("input", function(e) {
     validAddress(e.target.value);
     contact.address = e.target.value;
@@ -288,7 +288,7 @@ function validAddress(address) {
     return valid;
 }
 //--------------------------------City---------------------------------------------------------
-//Je récupère la ville via un addEventListener
+//J'écoute la variable inputCity avec addEventListener
 inputCity.addEventListener("input", function(e) {
     validCity(e.target.value);
     contact.city = e.target.value;
@@ -310,7 +310,7 @@ function validCity(city) {
 }
 
 //--------------------------------Email-----------------------------------------------------------
-//Je récupère l'email' via un addEventListener
+//J'écoute la variable inputEmail avec addEventListener
 inputEmail.addEventListener("input", function(e) {
     validEmail(e.target.value);
     contact.email = e.target.value;
