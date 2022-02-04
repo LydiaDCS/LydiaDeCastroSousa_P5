@@ -231,7 +231,7 @@ inputFirstName.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ prénom soit renseigné correctement
 function validFirstName(firstName) {
-    let regexFirstName = /^[a-zA-Z\s\-]{2,21}$/g;
+    let regexFirstName = /^[a-zA-Zéèàïêç\s\-]{2,21}$/g;
     let valid = false;
     let testName = regexFirstName.test(firstName);
     if (testName) {
@@ -253,7 +253,7 @@ inputLastName.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ nom soit renseigné correctement
 function validLastName(lastName) {
-    let regexLastName = /^[a-zA-Z\s\-]{2,25}$/g;
+    let regexLastName = /^[a-zA-Zéèàïêç\s\-]{2,25}$/g;
     let valid = false;
     let testLastName = regexLastName.test(lastName);
     if (testLastName) {
@@ -275,7 +275,7 @@ inputAddress.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ l'adresse soit renseigné correctement
 function validAddress(address) {
-    let regexAddress = /^[0-9]{0,10}[a-zA-Z\s\-]{2,30}$/g;
+    let regexAddress = /^[0-9]{0,10}[a-zA-Zéèàïêç\s\-]{2,30}$/g;
     let valid = false;
     let testAddress = regexAddress.test(address);
     if (testAddress) {
@@ -296,7 +296,7 @@ inputCity.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ ville soit renseigné correctement
 function validCity(city) {
-    let regexCity = /^[a-zA-Z\-\s]{2,30}$/g;
+    let regexCity = /^[a-zA-Zéèàïêç\-\s]{2,30}$/g;
     let valid = false;
     let testCity = regexCity.test(city);
     if (testCity) {
@@ -318,7 +318,7 @@ inputEmail.addEventListener("input", function(e) {
 
 // Fonction qui vérifie à l'aide d'une regex que le champ email soit renseigné correctement
 function validEmail(email) {
-    let regexEmail = /^[a-zA-Z0-9.!^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+$/g;
+    let regexEmail = /^[a-zA-Zéèàïç0-9.!^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+$/g;
     let valid = false;
     let testEmail = regexEmail.test(email);
     if (testEmail) {
@@ -339,7 +339,7 @@ submitButton.addEventListener("click", (event) => {
     event.preventDefault();
 
     //Je vérifie si tous les champs sont valides
-    if (validFirstName(contact.firstName) == false || validLastName(contact.lastName) == false || validCity(contact.city) == false || validAddress(contact.address) == false || validEmail(contact.email) == false) {
+    if (validFirstName(contact.firstName) == false || validLastName(contact.lastName) == false || validCity(contact.city) == false || validAddress(contact.address) == false || validEmail(contact.email) == false && basket == null || basket == 0) {
         return errAddress || errCity || errEmail || errFirstName || errLastName;
     } else {
         //J'enregistre dans le local storage les informations de l'utilisateur
