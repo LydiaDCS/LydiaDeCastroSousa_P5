@@ -7,7 +7,6 @@ async function fetchApi() {
         .then((res) => res.json())
         .then((data) => (products = data));
 }
-console.log(products);
 
 /* J'attends la réponse de ma fonction fetchApi, puis je crée une fonction avec une boucle pour afficher mes vignettes */
 async function canapDisplay() {

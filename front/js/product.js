@@ -1,7 +1,6 @@
 /*Je récupère l'id produit depuis l'Url avec URLSearchParams*/
 let params = (new URL(document.location)).searchParams;
 let productId = params.get("id");
-console.log(productId);
 
 /*Je déclare mes variables en ciblant les informations pour chaque produit*/
 let title = document.getElementById("title");
@@ -21,7 +20,6 @@ function fetchApiProduct() {
             }
         })
         .then((data) => {
-            console.log(data);
             displayProduct(data);
         })
         .catch((err) => {
@@ -76,23 +74,22 @@ function displayProduct(product) {
             } else if (selectProduct.quantity == 0 || selectProduct.quantity == "" || selectProduct.quantity > 100) {
                 alert('Veuillez indiquer une quantité correcte')
             } else {
-                addToLocalStorage(selectProduct);
+                addToSessionStorage(selectProduct);
                 //Chargement de la page cart - Page Panier
                 window.location.assign("cart.html");
             }
         }
 
         //Fonction qui ajoute des produits dans le local storage
-        function addToLocalStorage(product) {
+        function addToSessionStorage(product) {
             //Je récupère le panier
-            let basket = JSON.parse(localStorage.getItem("product"));
-            console.log(basket);
+            let basket = JSON.parse(sessionStorage.getItem("product"));
             //Si le panier est null, je retourne un tableau vide
             if (basket == null) {
                 basket = [];
                 //Et je pousse un nouveau produit dans le local storage et l'enregistre
                 basket.push(product);
-                localStorage.setItem("product", JSON.stringify(basket));
+                sessionStorage.setItem("product", JSON.stringify(basket));
             } //Sinon si le panier n'est pas vide, je vérifie si le produit enregistré possède le même id et la même couleur que le produit sélectionné
             else if (basket) {
                 let getProduct = basket.find(
@@ -102,11 +99,11 @@ function displayProduct(product) {
                 if (getProduct) {
                     getProduct.quantity = Number(selectProduct.quantity) + Number(getProduct.quantity);
                     //J'enregistre le nouveau panier
-                    localStorage.setItem("product", JSON.stringify(basket));
+                    sessionStorage.setItem("product", JSON.stringify(basket));
                 } //Sinon la quantité du produit reste inchangé et j'ajoute un nouveau produit dans le local storage et l'enregistre 
                 else {
                     basket.push(product);
-                    localStorage.setItem("product", JSON.stringify(basket));
+                    sessionStorage.setItem("product", JSON.stringify(basket));
                 }
             };
         }

@@ -1,5 +1,5 @@
 /* Je récupère mon panier du local storage */
-let basket = JSON.parse(localStorage.getItem("product"));
+let basket = JSON.parse(sessionStorage.getItem("product"));
 
 /* J'affiche mon panier */
 let basketDisplay = () => {
@@ -13,10 +13,6 @@ let basketDisplay = () => {
         // Sinon pour chaque produit dans le panier, je récupére l'Id depuis mon API pour ensuite afficher toutes les caractéristiques des produits
         else {
             for (let product of basket) {
-                console.log(basket);
-                console.log(product);
-                console.log(product.id);
-
                 //Fonction qui récupère les produits depuis l'API grâce à leur Id
                 function fetchApiProduct() {
                     fetch(`http://localhost:3000/api/products/` + product.id)
@@ -26,7 +22,6 @@ let basketDisplay = () => {
                             }
                         })
                         .then((data) => {
-                            console.log(data);
                             //J'affiche toutes les caractéristiques des produits
                             displayRestProduct(data);
                         })
@@ -36,7 +31,7 @@ let basketDisplay = () => {
                 }
                 fetchApiProduct();
 
-                //J'affiche mes produits présents dans le localStorage
+                //J'affiche mes produits présents dans le localStorage/sessionStorage
                 function displayRestProduct(kanap) {
 
                     //Je crée un nouvel objet en récupérant mes informations du local storage et en ajoutant les autres informations dont le prix
@@ -49,7 +44,6 @@ let basketDisplay = () => {
                         colors: product.colors,
                         price: kanap.price,
                     }
-                    console.log(productBasket);
 
                     //J'insère les informations de chaque produit dans la page panier
                     let cartItem = document.getElementById("cart__items");
@@ -85,7 +79,7 @@ let basketDisplay = () => {
                         quantityProduct.forEach((item) => {
                             //J'attrape la div article englobant le bouton pour modifier la quantité
                             let cart = item.closest("article");
-                            console.log(cart);
+
                             //Je récupère l'id et la couleur de l'article grâce au dataset stocké dans cart
                             let idDelete = cart.dataset.id;
                             let colorDelete = cart.dataset.color;
@@ -96,9 +90,7 @@ let basketDisplay = () => {
                             //J'écoute item lorsque celui-ci change
                             item.addEventListener("change", (event) => {
                                 event.preventDefault();
-                                console.log(item);
                                 newQuantity = Number(item.value);
-                                console.log(newQuantity);
 
                                 //Je crée une boucle pour trouver le produit qui a été ciblé grâce à son id et sa couleur
                                 for (let i = 0; i < basket.length; i++) {
@@ -113,7 +105,7 @@ let basketDisplay = () => {
                                 alert("Votre quantité va être mise à jour");
 
                                 //J'enregistre le nouveau panier
-                                localStorage.setItem("product", JSON.stringify(basket));
+                                sessionStorage.setItem("product", JSON.stringify(basket));
                             })
                         })
                     }
@@ -124,7 +116,6 @@ let basketDisplay = () => {
                     function getTotals() {
                         //Je crée mes variables en ciblant le texte HTML
                         let quantityProduct = document.getElementsByClassName("itemQuantity");
-                        console.log(quantityProduct);
                         let productTotalQuantity = document.getElementById("totalQuantity");
                         let priceDiv = document.querySelectorAll(".cart__item__content__description p:last-child");
                         let productTotalPrice = document.getElementById("totalPrice");
@@ -136,12 +127,10 @@ let basketDisplay = () => {
                         //Je crée une boucle qui parcourt chaque quantity de produit
                         for (let i = 0; i < quantityProduct.length; ++i) {
                             let quantity = quantityProduct[i].valueAsNumber;
-                            console.log(quantity);
                             let price = priceDiv[i].innerText.replace('€', '');
 
                             //Je convertis price en nombre
                             let priceNumber = Number(price);
-                            console.log(priceNumber);
 
                             totalQtt += quantity;
                             totalPrice += priceNumber * quantity;
@@ -175,7 +164,7 @@ let basketDisplay = () => {
                                 basket = basket.filter((element) => element.id !== idDelete || element.colors !== colorDelete);
 
                                 //Je push basket dans le storage
-                                localStorage.setItem("product", JSON.stringify(basket));
+                                sessionStorage.setItem("product", JSON.stringify(basket));
 
                                 //Je retire la div cart du dom
                                 cart.remove();
@@ -229,7 +218,7 @@ inputFirstName.addEventListener("input", function(e) {
     contact.firstName = e.target.value;
 });
 
-// Fonction qui vérifie à l'aide d'une regex que le champ prénom soit renseigné correctement
+// Fonction qui vérifie à l'aide d'une regex que le champ prénom soit renseigné correctement (ne pas contenir de chiffres)
 function validFirstName(firstName) {
     let regexFirstName = /^[a-zA-Zéèàïêç\s\-]{2,21}$/g;
     let valid = false;
@@ -251,7 +240,7 @@ inputLastName.addEventListener("input", function(e) {
     contact.lastName = e.target.value;
 });
 
-// Fonction qui vérifie à l'aide d'une regex que le champ nom soit renseigné correctement
+// Fonction qui vérifie à l'aide d'une regex que le champ nom soit renseigné correctement (ne pas contenir de chiffres)
 function validLastName(lastName) {
     let regexLastName = /^[a-zA-Zéèàïêç\s\-]{2,25}$/g;
     let valid = false;
@@ -273,7 +262,7 @@ inputAddress.addEventListener("input", function(e) {
     contact.address = e.target.value;
 });
 
-// Fonction qui vérifie à l'aide d'une regex que le champ l'adresse soit renseigné correctement
+// Fonction qui vérifie à l'aide d'une regex que le champ l'adresse soit renseigné correctement (contenir des chiffres au début puis des lettres ex: 15 rue de la Tour)
 function validAddress(address) {
     let regexAddress = /^[0-9]{0,10}[a-zA-Zéèàïêç\s\-]{2,30}$/g;
     let valid = false;
@@ -294,7 +283,7 @@ inputCity.addEventListener("input", function(e) {
     contact.city = e.target.value;
 });
 
-// Fonction qui vérifie à l'aide d'une regex que le champ ville soit renseigné correctement
+// Fonction qui vérifie à l'aide d'une regex que le champ ville soit renseigné correctement (ne pas contenir de chiffres)
 function validCity(city) {
     let regexCity = /^[a-zA-Zéèàïêç\-\s]{2,30}$/g;
     let valid = false;
@@ -316,7 +305,7 @@ inputEmail.addEventListener("input", function(e) {
     contact.email = e.target.value;
 });
 
-// Fonction qui vérifie à l'aide d'une regex que le champ email soit renseigné correctement
+// Fonction qui vérifie à l'aide d'une regex que le champ email soit renseigné correctement (être sous la forme de xxxx@xx.x)
 function validEmail(email) {
     let regexEmail = /^[a-zA-Zéèàïç0-9.!^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+$/g;
     let valid = false;
@@ -343,20 +332,18 @@ submitButton.addEventListener("click", (event) => {
         return errAddress || errCity || errEmail || errFirstName || errLastName;
     } else {
         //J'enregistre dans le local storage les informations de l'utilisateur
-        localStorage.setItem("contact", JSON.stringify(contact));
+        sessionStorage.setItem("contact", JSON.stringify(contact));
 
         //Je crée une boucle sur tous les produits du panier pour récupérer les id des produits
         for (let i = 0; i < basket.length; i++) {
             products.push(basket[i].id);
         }
-        console.log(products);
 
         //Je crée mon objet pour envoyer mes informations utilisateurs et mes id à l'API
         const order = {
             contact: contact,
             products: products,
         }
-        console.log(order);
 
         //Fonction fetch qui envoie à l'API les données saisies par l'utilisateur et son panier 
         //Option nécessaire à l'Api pour utiliser POST
@@ -377,9 +364,7 @@ submitButton.addEventListener("click", (event) => {
                 }
             })
             .then((data) => {
-                console.log(data);
                 let orderId = data.orderId;
-                console.log(orderId);
                 window.location.assign("confirmation.html?id=" + orderId);
             })
     }
