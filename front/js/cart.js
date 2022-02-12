@@ -328,7 +328,7 @@ submitButton.addEventListener("click", (event) => {
     event.preventDefault();
 
     //Je vérifie si tous les champs sont valides
-    if (validFirstName(contact.firstName) == false || validLastName(contact.lastName) == false || validCity(contact.city) == false || validAddress(contact.address) == false || validEmail(contact.email) == false && basket == null || basket == 0) {
+    if (validFirstName(contact.firstName) == false || validFirstName(contact.firstName) == null || validLastName(contact.lastName) == false || validLastName(contact.lastName) == null || validCity(contact.city) == false || validCity(contact.city) == null || validAddress(contact.address) == false || validAddress(contact.address) == null || validEmail(contact.email) == false || alidEmail(contact.email) == null && basket == null || basket == 0) {
         return errAddress || errCity || errEmail || errFirstName || errLastName;
     } else {
         //J'enregistre dans le local storage les informations de l'utilisateur
